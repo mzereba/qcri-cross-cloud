@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+	<title>Cross Could Service Client</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<!-- meta http-equiv="Refresh" content="3600" -->
+	
+	<link rel="stylesheet" type="text/css" href="css/stylehtml.css">
+	
+	<style type="text/css">
+	  html { height: 100% }
+	  body { height: 100%; margin: 0; padding: 0 }
+	</style>
+	
+	<script type="text/javascript" src="scripts/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="scripts/jquery-1.3.2.debug.js"></script>
+	<script type="text/javascript" src="scripts/json.debug.js"></script>
+	<script type="text/javascript" src="scripts/jquery.min.js"></script>
+	
+	<script type="text/javascript" src="scripts/utils.js" djConfig="parseOnLoad: true"></script>
+
+	<script type="text/javascript">
+		// Variables initialization
+		var path = "";
+		var username = "mzereba";
+		var oContentBean;
+	</script>
+
+	<script type="text/javascript">
+		// Onload function
+		$(document).ready(function() {
+			  window.oncontextmenu = function() { return false; }
+			  //jQuery.support.cors = true;
+			  $(function() {
+				loadContent(username, path);
+			});
+			
+		});
+	</script>
+	
+	<script type="text/javascript">
+		// The main function for loading the related content
+		function loadContent(sUsername, sPath){
+			oContentBean = null;
+			var sUrl = "http://localhost:8080/crosscloudservice/services/RDF/retrieveContent?username="+sUsername+"&path="+sPath;
+			$.ajax({
+					type: "GET",
+					url: sUrl,
+					contentType: "application/json",
+					dataType: "json",
+					async: false,
+					success: function parse(resp, status, xhr) {
+					   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+					   $("#message").hide();
+					   $.each(resp, function() {
+							oContentBean = resp;
+			      	   });
+						
+			      	   renderContent();
+					},
+					error: function(resp, status, xhr){
+						$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+						$("#message").show();
+					}
+					
+				});
+				
+		}
+	</script>
+	
+	<script type="text/javascript">
+		// The main function to render the content
+		function renderContent()
+		{
+		
+			var sType;
+			if(oContentBean.attributes.type == "false"){
+				sType = "Directory";
+			}else{
+				sType = "RDF";
+			}
+			
+			var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
+			
+			document.getElementById('pannel').innerHTML="";
+			var itemText = "";
+			itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>";
+			itemText += "<tbody>";
+			itemText += "<tr bgcolor='#757561'>";
+			itemText += "<td class='expfirst' align='left' width='950px'>Name</td>";
+			itemText += "<td class='expfirst' align='left' width='100px'>Size</td>";
+			itemText += "<td class='expfirst' align='left' width='100px'>Type</td>";	
+			itemText += "<td class='expfirst' align='left' width='300px'>Last Modified</td>";
+			itemText += "<td class='expfirst' align='left' width='150px'>Actions</td>";			
+			itemText += "</tr>";
+			
+			itemText += "<tr class='border_bottom'>";
+			itemText += "<td align='left' width='950px'>" + oContentBean.attributes.name + "</td>";
+			itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
+			itemText += "<td align='left' width='100px'>" + sType + "</td>";	
+			itemText += "<td align='left' width='300px'>" + sDate + "</td>";
+			
+			// Only RDF
+			if(oContentBean.ACL != null){
+				itemText += "<td align='left' width='150px'>" + + "</td>";			
+			}else{
+			itemText += "<td align='left' width='150px'></td>";			
+			}
+				
+			itemText += "</tr>";		
+			itemText += "</tbody>";
+			itemText += "</table>";
+			document.getElementById('pannel').innerHTML=itemText;
+		}
+	</script>
+	
+	
+	
+</head>
+
+<body>
+	<div id="message" align="center"> </div>
+	
+	<div id="container">
+   	
+   		<fieldset style="padding-bottom:0px;padding-right:0px;padding-left:00px;border: none;">
+			<img src="images/logo.png" />
+		</fieldset>
+		
+		<fieldset style="padding:0px;border: none;">
+			<hr class="bar" /> 
+		</fieldset>
+		
+		
+		<!-- Middle pannel -->
+		<fieldset style="padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;">
+		  		<!-- Table -->
+				<div id="pannel">
+				
+				</div>
+		</fieldset>
+						
+		<fieldset style="padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;">
+			<hr class="bar"/> 
+		</fieldset>
+	</div>
+	
+	<div id="footer">
+		Copyright &copy; 2014 <a href="http://www.qcri.qa" target="_blank">QCRI</a> | All Rights Reserved, Doha, Qatar.
+	</div>
+	
+	<br/>
+
+</body>
+</html>

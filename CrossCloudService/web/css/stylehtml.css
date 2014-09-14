@@ -1,0 +1,183 @@
+/*
+ * Streaming Server
+ *
+ * Last Modified: 24 October 2013
+ *
+ */
+ 
+ 
+ body{
+	margin: 0 auto;
+	height: 1000px;
+	font: 13px/1.75 Arial, 'Helvetica Neue', FreeSans, sans-serif;
+	
+ }
+ 
+#container{
+	margin: 0 auto;
+	width: 1600px;
+	padding: 10px;
+
+ }
+ 
+#server1{
+	width: 100%;
+/*	float: left; 
+	height: 650px; */
+}
+ 
+#server2{
+	width: 100%;
+/*	float: left; */
+ }	
+ h1{
+	font: 20px Century Gothic, sans-serif; 
+	font-weight: bold;
+
+ }
+ form{
+	font: Century Gothic, sans-serif; 
+	padding: 20px;
+ }
+ table{
+	font: Century Gothic, sans-serif; 
+ }
+ 
+ fieldset{
+	padding: 10px;
+	background: white;
+	border: 1px dotted black;
+ }
+ 
+ legend{
+	background: white;
+	border: 1px solid #72ce9b;
+	padding-right: 10px;
+	padding-left: 10px;
+
+ }
+ 
+ hr.bar{
+	height: 5px;
+	background-color: #757561;
+
+ }
+ 
+.fieldhr{
+	color: #fff; 
+	background-color: #fff; 
+	border: 1px dotted #757561; 
+	border-style: none none dotted; 
+	width: 100%;
+	text-align: left;
+
+ }
+ #footer{
+	margin: 0 auto;
+
+	text-align: center;
+ }
+ 
+ .ldiv{
+	width: 50%;
+	float: left;
+	padding: 10px;
+	text-transform: uppercase;
+/*	font-weight: bold; */
+	font-family: Century Gothic;
+	font: 10px;
+	margin-bottom: 10px;
+ }
+ .ldiv-color{
+	width: 50%;
+	float: left;
+	padding: 10px;
+	text-transform: uppercase;
+/*	font-weight: bold; */
+	font-family: Century Gothic;
+	font: 10px;
+	margin-bottom: 10px;
+	background-color: #C0C0C0;
+ }
+ 
+ #field{
+	
+ }
+ .vdiv{
+	/*width: 25%;*/
+	float: right;
+	padding: 10px;
+	margin-bottom: 10px;
+ }
+ 
+ .exp{
+	clear: both;
+/*	padding-left: 10px; */
+	font: 12px; 
+	font-style: oblique;
+	margin-top: 10px;
+
+ }
+ 
+ .exptable{
+	font-size: 12px; 
+	font-family: 
+ }
+ 
+ .expfirst{
+	font-weight: bold;
+	color: #ffffff;
+ }
+ .expresult{
+	clear: both;
+	padding-left: 30px;
+	font: 16px; 
+	font-weight: bold;
+	margin-top: 10px;
+	color: #008000;
+	
+ }
+ 
+ .legendcolors{
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border: 1px dotted #72CE9B;
+ }
+ 
+  .legendfont{
+    font-size: 9pt;
+ }
+ 
+ .context_menu{
+	background-color:white;
+	border:1px solid gray;
+ }
+ 
+ .context_menu_item{
+	padding:3px 6px;
+ }
+ 
+ .context_menu_item:hover{
+	background-color:#CCCCCC;
+ }
+
+ .context_menu_separator{
+	background-color:gray;
+	height:1px;
+	margin:0;
+	padding:0;
+ }
+ 
+ caption{
+	 background-color: #757561;
+	 border: 1px dotted #72CE9B;
+	 font: 16px Century Gothic, sans-serif;
+	 font-weight: bold;
+	 color:white
+ } 
+ 
+ tr.border_bottom td {
+  border-bottom: 1px dotted #000000;
+}
+ 
