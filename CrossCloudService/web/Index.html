@@ -23,25 +23,136 @@
 	<script type="text/javascript">
 		// Variables initialization
 		var path = "";
-		var username = "mzereba";
+		var username = "";
 		var oContentBean;
 	</script>
-
+	
 	<script type="text/javascript">
 		// Onload function
 		$(document).ready(function() {
 			  window.oncontextmenu = function() { return false; }
 			  //jQuery.support.cors = true;
 			  $(function() {
-				loadContent(username, path);
+				
 			});
 			
 		});
 	</script>
 	
 	<script type="text/javascript">
+	function doLogin()
+	{
+		username = document.getElementById('username').value;
+		refreshLoginBox();
+	}
+	
+	function doLogout()
+	{
+		username = "";
+		path = "";
+		refreshLoginBox();
+	}
+	
+	function refreshLoginBox()
+	{
+		if(username == ""){
+			var itemText = "";
+			itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
+	   		itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
+			itemText +=	"<img src='images/logo.png' />";
+			itemText += "</fieldset>";
+			
+			itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;'></fieldset>";
+			itemText += "<!-- Form -->";
+			itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;'>";
+			itemText +=	" <table>";
+			itemText +=	"	<tr>";
+			itemText +=	"		<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Username</b></font></td>";
+			itemText +=	"		<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Password</b></font></td>";
+			itemText +=	"		<td align='left' style='vertical-align:bottom;width:100px;'><font color='#757561'><b>End point</b></font></td>";
+			itemText +=	"	</tr>";
+			itemText +=	"	<tr>";
+			itemText +=	"		<td align='left'><input name='username' id='username' type='text' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
+			itemText +=	"		<td align='left'><input name='password' id='password' type='password' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
+			itemText +=	"		<td align='left'><input name='endpoint' id='endpoint' type='text' style='border: 1px dotted #72CE9B;' width='100px' size='15' value=''></td>";
+			itemText +=	"		<td align='left' style='vertical-align:top;'>";
+			itemText +=	"			<input type='button' id='login' value='Login' onClick='doLogin();'>";
+			itemText +=	"		</td>";
+			itemText +=	"	</tr>";
+			itemText +=	" </table>";
+			itemText += "</fieldset>";
+			itemText += "</fieldset>";
+		
+			itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
+			itemText += "	<hr class='bar' /> ";
+		    itemText += "</fieldset>";
+				
+		    itemText += "<!-- Middle pannel -->";
+		    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
+		  	itemText +=	"	<!-- Table -->";
+			itemText +=	"	<div id='pannel'>";
+				
+			itemText +=	"	</div>";
+		    itemText += "</fieldset>";
+						
+			itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
+			itemText +=	"	<hr class='bar'/> ";
+			itemText += "</fieldset>";
+			
+			document.getElementById('container').innerHTML=itemText;
+			
+			renderContent();
+			
+		}else{
+			var itemText = "";
+			itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
+	   		itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
+			itemText +=	"<img src='images/logo.png' />";
+			itemText += "</fieldset>";
+			
+			itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:975px;'></fieldset>";
+			itemText += "<!-- Form -->";
+			itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:130px; margin-top: 55px;'>";
+			itemText +=	"<table>";
+			itemText +=	"	<tr>";
+			itemText +=	"		<td align='left' style='vertical-align:bottom;width:50px;'><img src='images/profile-portrait.png' style='border: 1px dotted #72CE9B;'></td>";
+			itemText +=	"		<td align='left' style='vertical-align:top;width:85px;'>";
+			itemText +=	"			&nbsp;<font color='#757561'><b>" + username + "</b></font><br>";
+			itemText +=	"			<input type='button' id='login' value='Logout' onClick='doLogout();'>";
+			itemText +=	"		</td>";
+			itemText +=	"	</tr>";
+			itemText +=	"	</table>";
+			itemText += "</fieldset>";
+			
+			itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
+			itemText += "	<hr class='bar' /> ";
+		    itemText += "</fieldset>";
+				
+		    itemText += "<!-- Middle pannel -->";
+		    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
+		  	itemText +=	"	<!-- Table -->";
+			itemText +=	"	<div id='pannel'>";
+				
+			itemText +=	"	</div>";
+		    itemText += "</fieldset>";
+						
+			itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
+			itemText +=	"	<hr class='bar'/> ";
+			itemText += "</fieldset>";
+			
+			document.getElementById('container').innerHTML=itemText;
+			
+			loadContent(username, path);
+		}
+		
+		
+	}
+	</script>
+	
+	<script type="text/javascript">
 		// The main function for loading the related content
-		function loadContent(sUsername, sPath){
+		function loadContent(sUsername, sPath)
+		{
 			oContentBean = null;
 			var sUrl = "http://localhost:8080/crosscloudservice/services/RDF/retrieveContent?username="+sUsername+"&path="+sPath;
 			$.ajax({
@@ -73,75 +184,95 @@
 		// The main function to render the content
 		function renderContent()
 		{
-		
-			var sType;
-			if(oContentBean.attributes.type == "false"){
-				sType = "Directory";
-			}else{
-				sType = "RDF";
-			}
-			
-			var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
-			
 			document.getElementById('pannel').innerHTML="";
-			var itemText = "";
-			itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>";
-			itemText += "<tbody>";
-			itemText += "<tr bgcolor='#757561'>";
-			itemText += "<td class='expfirst' align='left' width='950px'>Name</td>";
-			itemText += "<td class='expfirst' align='left' width='100px'>Size</td>";
-			itemText += "<td class='expfirst' align='left' width='100px'>Type</td>";	
-			itemText += "<td class='expfirst' align='left' width='300px'>Last Modified</td>";
-			itemText += "<td class='expfirst' align='left' width='150px'>Actions</td>";			
-			itemText += "</tr>";
 			
-			itemText += "<tr class='border_bottom'>";
-			itemText += "<td align='left' width='950px'>" + oContentBean.attributes.name + "</td>";
-			itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
-			itemText += "<td align='left' width='100px'>" + sType + "</td>";	
-			itemText += "<td align='left' width='300px'>" + sDate + "</td>";
-			
-			// Only RDF
-			if(oContentBean.ACL != null){
-				itemText += "<td align='left' width='150px'>" + + "</td>";			
-			}else{
-			itemText += "<td align='left' width='150px'></td>";			
-			}
+			if(username !="")
+			{
+				var sType;
+				if(oContentBean.attributes.type == "false"){
+					sType = "Directory";
+				}else{
+					sType = "RDF";
+				}
 				
-			itemText += "</tr>";		
-			itemText += "</tbody>";
-			itemText += "</table>";
-			document.getElementById('pannel').innerHTML=itemText;
+				var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
+				
+				var itemText = "";
+				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>";
+				itemText += "<tbody>";
+				itemText += "<tr bgcolor='#757561'>";
+				itemText += "<td class='expfirst' align='left' width='800px'>Name</td>";
+				itemText += "<td class='expfirst' align='left' width='100px'>Size</td>";
+				itemText += "<td class='expfirst' align='left' width='100px'>Type</td>";	
+				itemText += "<td class='expfirst' align='left' width='180px'>Last Modified</td>";
+				itemText += "<td class='expfirst' align='left' width='150px'>Actions</td>";			
+				itemText += "</tr>";
+				
+				itemText += "<tr class='border_bottom'>";
+				itemText += "<td align='left' width='800px'>" + oContentBean.attributes.name + "</td>";
+				itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
+				itemText += "<td align='left' width='100px'>" + sType + "</td>";	
+				itemText += "<td align='left' width='180px'>" + sDate + "</td>";
+				
+				// Only RDF
+				if(oContentBean.ACL != null){
+					itemText += "<td align='left' width='150px'>" + + "</td>";			
+				}else{
+				itemText += "<td align='left' width='150px'></td>";			
+				}
+					
+				itemText += "</tr>";		
+				itemText += "</tbody>";
+				itemText += "</table>";
+				document.getElementById('pannel').innerHTML=itemText;
+			}
 		}
-	</script>
-	
-	
-	
+	</script>	
 </head>
 
 <body>
 	<div id="message" align="center"> </div>
 	
 	<div id="container">
-   	
-   		<fieldset style="padding-bottom:0px;padding-right:0px;padding-left:00px;border: none;">
-			<img src="images/logo.png" />
+   		<fieldset style="padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;">
+	   		<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;">
+				<img src="images/logo.png" />
+			</fieldset>
+			
+			<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;"></fieldset>
+			<!-- Form -->
+			<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;">
+				<table>
+					<tr>
+						<td align="left" style="vertical-align:bottom;width:85px;"><font color="#757561"><b>Username</b></font></td>
+						<td align="left" style="vertical-align:bottom;width:85px;"><font color="#757561"><b>Password</b></font></td>
+						<td align="left" style="vertical-align:bottom;width:100px;"><font color="#757561"><b>End point</b></font></td>
+					</tr>
+					<tr>
+						<td align="left"><input name="username" id="username" type="text" style="border: 1px dotted #72CE9B;" width="85px" size="10" value=""></td>
+						<td align="left"><input name="password" id="password" type="password" style="border: 1px dotted #72CE9B;" width="85px" size="10" value=""></td>
+						<td align="left"><input name="endpoint" id="endpoint" type="text" style="border: 1px dotted #72CE9B;" width="100px" size="15" value=""></td>
+						<td align="left" style="vertical-align:top;">
+							<input type="button" id="login" value="Login" onClick="doLogin();">
+						</td>
+					</tr>
+				</table>
+			</fieldset>
 		</fieldset>
 		
-		<fieldset style="padding:0px;border: none;">
+		<fieldset style="padding:0px;border: none;" width="1320px;">
 			<hr class="bar" /> 
 		</fieldset>
-		
-		
+				
 		<!-- Middle pannel -->
-		<fieldset style="padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;">
+		<fieldset style="padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;" width="1320px;">
 		  		<!-- Table -->
 				<div id="pannel">
 				
 				</div>
 		</fieldset>
 						
-		<fieldset style="padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;">
+		<fieldset style="padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;" width="1320px;">
 			<hr class="bar"/> 
 		</fieldset>
 	</div>
