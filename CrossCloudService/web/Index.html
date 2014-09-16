@@ -24,7 +24,7 @@
 		// Variables initialization
 		var path = "";
 		var username = "";
-		var oContentBean;
+		var arrayContentBeans;
 	</script>
 	
 	<script type="text/javascript">
@@ -153,7 +153,7 @@
 		// The main function for loading the related content
 		function loadContent(sUsername, sPath)
 		{
-			oContentBean = null;
+			arrayContentBeans = new Array();
 			var sUrl = "http://localhost:8080/crosscloudservice/services/RDF/retrieveContent?username="+sUsername+"&path="+sPath;
 			$.ajax({
 					type: "GET",
@@ -165,7 +165,9 @@
 					   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
 					   $("#message").hide();
 					   $.each(resp, function() {
-							oContentBean = resp;
+							$.each(this, function(i, cb) {
+								arrayContentBeans.push(cb);
+							});
 			      	   });
 						
 			      	   renderContent();
@@ -188,15 +190,6 @@
 			
 			if(username !="")
 			{
-				var sType;
-				if(oContentBean.attributes.type == "false"){
-					sType = "Directory";
-				}else{
-					sType = "RDF";
-				}
-				
-				var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
-				
 				var itemText = "";
 				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>";
 				itemText += "<tbody>";
@@ -208,20 +201,33 @@
 				itemText += "<td class='expfirst' align='left' width='150px'>Actions</td>";			
 				itemText += "</tr>";
 				
-				itemText += "<tr class='border_bottom'>";
-				itemText += "<td align='left' width='800px'>" + oContentBean.attributes.name + "</td>";
-				itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
-				itemText += "<td align='left' width='100px'>" + sType + "</td>";	
-				itemText += "<td align='left' width='180px'>" + sDate + "</td>";
-				
-				// Only RDF
-				if(oContentBean.ACL != null){
-					itemText += "<td align='left' width='150px'>" + + "</td>";			
-				}else{
-				itemText += "<td align='left' width='150px'></td>";			
-				}
+				for (var key in arrayContentBeans) {
+			 		var oContentBean = arrayContentBeans[key];
+					var sType;
+					if(oContentBean.attributes.type == "false"){
+						sType = "Directory";
+					}else{
+						sType = "RDF";
+					}
 					
-				itemText += "</tr>";		
+					var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
+										
+					itemText += "<tr class='border_bottom'>";
+					itemText += "<td align='left' width='800px'>" + oContentBean.attributes.name + "</td>";
+					itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
+					itemText += "<td align='left' width='100px'>" + sType + "</td>";	
+					itemText += "<td align='left' width='180px'>" + sDate + "</td>";
+					
+					// Only RDF
+					if(oContentBean.ACL != null){
+						itemText += "<td align='left' width='150px'>" + + "</td>";			
+					}else{
+						itemText += "<td align='left' width='150px'></td>";			
+					}
+						
+					itemText += "</tr>";
+				}
+						
 				itemText += "</tbody>";
 				itemText += "</table>";
 				document.getElementById('pannel').innerHTML=itemText;
