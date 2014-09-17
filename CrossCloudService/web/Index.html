@@ -165,9 +165,9 @@
 					   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
 					   $("#message").hide();
 					   $.each(resp, function() {
-							$.each(this, function(i, cb) {
-								arrayContentBeans.push(cb);
-							});
+							//$.each(this, function(i, cb) {
+								arrayContentBeans.push(this);
+							//});
 			      	   });
 						
 			      	   renderContent();
@@ -204,7 +204,7 @@
 				for (var key in arrayContentBeans) {
 			 		var oContentBean = arrayContentBeans[key];
 					var sType;
-					if(oContentBean.attributes.type == "false"){
+					if(oContentBean.attributes.type == false){
 						sType = "Directory";
 					}else{
 						sType = "RDF";
