@@ -9,5 +9,6 @@
 	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.ws.MYECLIPSE_JERSEY_1_4_CORE"/>
 	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.ws.MYECLIPSE_JERSEY_1_4_SERVER"/>
 	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.ws.MYECLIPSE_JERSEY_1_4_JSON"/>
+	<classpathentry kind="lib" path="jars/jackson-all-1.9.0.jar"/>
 	<classpathentry kind="output" path="web/WEB-INF/classes"/>
 </classpath>
