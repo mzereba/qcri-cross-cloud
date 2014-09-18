@@ -5,10 +5,29 @@
 	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_6_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.ws.MYECLIPSE_JERSEY_1_4_JAXB"/>
-	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.ws.MYECLIPSE_JERSEY_1_4_CORE"/>
-	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.ws.MYECLIPSE_JERSEY_1_4_SERVER"/>
-	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.ws.MYECLIPSE_JERSEY_1_4_JSON"/>
 	<classpathentry kind="lib" path="jars/jackson-all-1.9.0.jar"/>
+	<classpathentry kind="lib" path="jars/activation-1.1.jar"/>
+	<classpathentry kind="lib" path="jars/asm-3.1.jar"/>
+	<classpathentry kind="lib" path="jars/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="jars/httpclient-4.2.3.jar"/>
+	<classpathentry kind="lib" path="jars/httpcore-4.2.2.jar"/>
+	<classpathentry kind="lib" path="jars/jaxb-api-2.1.jar"/>
+	<classpathentry kind="lib" path="jars/jaxb-impl-2.1.12.jar"/>
+	<classpathentry kind="lib" path="jars/jcl-over-slf4j-1.6.4.jar"/>
+	<classpathentry kind="lib" path="jars/jena-arq-2.10.1.jar"/>
+	<classpathentry kind="lib" path="jars/jena-core-2.10.1.jar"/>
+	<classpathentry kind="lib" path="jars/jena-iri-0.9.6.jar"/>
+	<classpathentry kind="lib" path="jars/jena-tdb-0.10.1.jar"/>
+	<classpathentry kind="lib" path="jars/jersey-core-1.4.jar"/>
+	<classpathentry kind="lib" path="jars/jersey-json-1.4.jar"/>
+	<classpathentry kind="lib" path="jars/jersey-server-1.4.jar"/>
+	<classpathentry kind="lib" path="jars/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="jars/jsr311-api-1.1.1.jar"/>
+	<classpathentry kind="lib" path="jars/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="jars/slf4j-api-1.6.4.jar"/>
+	<classpathentry kind="lib" path="jars/slf4j-log4j12-1.6.4.jar"/>
+	<classpathentry kind="lib" path="jars/stax-api-1.0-2.jar"/>
+	<classpathentry kind="lib" path="jars/xercesImpl-2.11.0.jar"/>
+	<classpathentry kind="lib" path="jars/xml-apis-1.4.01.jar"/>
 	<classpathentry kind="output" path="web/WEB-INF/classes"/>
 </classpath>

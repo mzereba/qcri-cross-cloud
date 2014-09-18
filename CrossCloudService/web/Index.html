@@ -218,8 +218,8 @@
 					itemText += "<td align='left' width='100px'>" + sType + "</td>";	
 					itemText += "<td align='left' width='180px'>" + sDate + "</td>";
 					
-					// Only RDF
-					if(oContentBean.ACL != null){
+					// Only for RDF
+					if(oContentBean.attributes.type == true){
 						itemText += "<td align='left' width='150px'>" + + "</td>";			
 					}else{
 						itemText += "<td align='left' width='150px'></td>";			

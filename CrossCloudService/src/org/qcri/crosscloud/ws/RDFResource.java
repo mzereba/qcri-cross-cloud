@@ -22,12 +22,16 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
-
 import org.qcri.crosscloud.utils.ACLBean;
 import org.qcri.crosscloud.utils.AttributesBean;
 import org.qcri.crosscloud.utils.ContentBean;
 import org.qcri.crosscloud.utils.RDFBean;
 
+import server.query.QueryManager;
+
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.sun.jersey.spi.resource.Singleton;
 
 
@@ -53,13 +57,98 @@ public class RDFResource {
 	@Path("/retrieveContent")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String retrieve(@QueryParam("username") String Username, @QueryParam("path") String Path) {
+	    
+		//ArrayList<ContentBean> lContentBeans = getAnswers("http://ahmedelroby.rww.io/profile/card#me", Path);
+    
+	//*//	
 		ContentBean oContentBean = buildResult(Username, Path);
-		List<ContentBean> lContentBeans = new ArrayList<ContentBean>();
-		lContentBeans.add(oContentBean);
+     	List<ContentBean> lContentBeans = new ArrayList<ContentBean>();
+    	lContentBeans.add(oContentBean);
+   //*/ 	
 		
 		String jsonString = serializeListToJSON(lContentBeans);
 		
 		return jsonString;
+	}
+	
+	/**
+	 * 
+	 * @param sUsername web id of user
+	 * @param sPath current path
+	 * @return a populated ContentBean
+	 */
+	public static ArrayList<ContentBean> getAnswers(String sUsername, String sPath){
+		ArrayList<ContentBean> contentBeans = new ArrayList<ContentBean>();
+		ResultSet results;
+		// Initialize Query Manager
+		QueryManager qManager = new QueryManager();
+		if(sPath.equals("")){
+			results = qManager.getStorageSpace(sUsername);
+		}
+		else if(sPath.endsWith("/")){
+			results = qManager.getSubTree(sPath);
+			
+		}
+		else{
+			results = qManager.getAllTriples(sPath);
+		}
+		if(sPath.endsWith("/") || sPath.equals("")){
+			while(results.hasNext()){
+				QuerySolution soln = results.nextSolution();
+				RDFNode x = soln.get("o");
+				
+				// Fill AttributeBean
+				AttributesBean aB = new AttributesBean();
+				aB.setName(x.toString());
+				aB.setType(false);
+				aB.setSize(-1);
+				aB.setLastModified(new Date());
+				
+				// ACLBean Empty
+				ACLBean aclB = new ACLBean();
+				RDFBean rdfB = new RDFBean();
+				
+				// Fill ContentBean
+				ContentBean cB = new ContentBean();
+				cB.setUsername(sUsername); //From request
+				cB.setAttributes(aB);
+				cB.setACL(aclB);
+				cB.setRDF(rdfB);
+				
+				contentBeans.add(cB);
+			}
+		}
+		else{
+			String rdfFile = "";
+			while(results.hasNext()){				
+				rdfFile += "<" + sPath + "> ";
+				QuerySolution soln = results.nextSolution();
+				RDFNode x = soln.get("p");
+				rdfFile += "<" + x.toString() + "> ";
+				x = soln.get("o");
+				rdfFile += "<" + x.toString() + ">.\n";
+			}
+			System.out.println("RDF File returned:\n" + rdfFile);
+			// Fill AttributeBean
+			AttributesBean aB = new AttributesBean();
+			aB.setType(true);
+			// ACLBean Empty
+			ACLBean aclB = new ACLBean();
+			
+			RDFBean rdfB = new RDFBean();
+			rdfB.setText(rdfFile);
+			
+			// Fill ContentBean
+			ContentBean cB = new ContentBean();
+			cB.setUsername(sUsername); //From request
+			cB.setAttributes(aB);
+			cB.setACL(aclB);
+			cB.setRDF(rdfB);
+			
+			contentBeans.add(cB);
+		}
+		
+	    return contentBeans;
 	}
 
 	/**

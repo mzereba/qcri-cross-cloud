@@ -37,7 +37,7 @@
   <property name="dist.tld" value="${dist.webinf}/tld"/>
   <property name="dist.doc" value="${dist.dir}/doc"/>
 	  
-  <property name="tomcat.home" value="C:\apache-tomcat-7.0.52"/>
+  <property name="tomcat.home" value="C:\apache-tomcat-6.0.18\webapps"/>
   <property name="tomcat.logs" value="${tomcat.home}/logs"/>
   <property name="tomcat.log.common" value="${tomcat.logs}/common.log"/>
   <property name="tomcat.log.instance" value="${tomcat.logs}/${system.name}.log"/>
@@ -62,7 +62,20 @@
   	${jar.dir}/jettison-1.1.jar;
   	${jar.dir}/jsr311-api-1.1.1.jar;
   	${jar.dir}/jackson-all-1.9.0.jar;
-  	${jar.dir}/stax-api-1.0-2.jar"
+  	${jar.dir}/stax-api-1.0-2.jar
+  	${jar.dir}/commons-codec-1.6.jar;
+  	${jar.dir}/jena-core-2.10.1.jar;
+  	${jar.dir}/slf4j-log4j12-1.6.4.jar;
+  	${jar.dir}/httpclient-4.2.3.jar;
+  	${jar.dir}/jena-iri-0.9.6.jar;
+  	${jar.dir}/xercesImpl-2.11.0.jar;
+  	${jar.dir}/httpcore-4.2.2.jar;
+  	${jar.dir}/jena-tdb-0.10.1.jar;
+  	${jar.dir}/xml-apis-1.4.01.jar;
+  	${jar.dir}/jcl-over-slf4j-1.6.4.jar;
+  	${jar.dir}/log4j-1.2.16.jar;
+  	${jar.dir}/jena-arq-2.10.1.jar;
+  	${jar.dir}/slf4j-api-1.6.4.jar"
   />
 	
   <fileset dir="${jar.dir}" id="required.libs">
