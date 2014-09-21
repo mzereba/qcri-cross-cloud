@@ -194,19 +194,20 @@
 			document.getElementById('pannel').innerHTML="";
 			
 			var itemText = "";
-				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>";
-				itemText += "<tbody>";
+				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
 				itemText += "<tr bgcolor='#757561'>";
-				itemText += "<td class='expfirst' align='left' width='800px'>Name</td>";
-				itemText += "<td class='expfirst' align='left' width='100px'>Size</td>";
-				itemText += "<td class='expfirst' align='left' width='100px'>Type</td>";	
-				itemText += "<td class='expfirst' align='left' width='180px'>Last Modified</td>";
-				itemText += "<td class='expfirst' align='left' width='150px'>Actions</td>";			
+				itemText += "<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
+				itemText += "<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
+				itemText += "<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
+				itemText += "<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
+				itemText += "<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
 				itemText += "</tr>";
+				itemText += "</table>";
+				itemText += "<table class='hoverRow' width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
+				itemText += "<tbody>";
 				
 			if(username !="")
-			{
-						
+			{			
 				//Save current path
 			 	path = extractCurrentPath(arrayContentBeans[0].attributes.name);
 			 	home = path;
@@ -225,23 +226,23 @@
 					var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
 										
 					itemText += "<tr>";
-					itemText += "<td align='left' width='800px'>" + "<a href='#' onclick='javascript:loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + oContentBean.attributes.name + "</a></td>";
-					itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
-					itemText += "<td align='left' width='100px'>" + sType + "</td>";	
-					itemText += "<td align='left' width='180px'>" + sDate + "</td>";
+					itemText += "<td align='left' width='800px' height='40px'>" + "<a href='#' onclick='javascript:loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + removeAbsolutePath(oContentBean.attributes.name) + "</a></td>";
+					itemText += "<td align='left' width='100px' height='40px'>" + oContentBean.attributes.size + "</td>";
+					itemText += "<td align='left' width='100px' height='40px'>" + sType + "</td>";	
+					itemText += "<td align='left' width='180px' height='40px'>" + sDate + "</td>";
 					
 					// Only for RDF
 					if(oContentBean.attributes.type == true){
-						itemText += "<td align='left' width='150px'>" + + "</td>";			
+						itemText += "<td align='left' width='150px' height='40px'>" + + "</td>";			
 					}else{
-						itemText += "<td align='left' width='150px'></td>";			
+						itemText += "<td align='left' width='150px' height='40px'></td>";			
 					}
 						
 					itemText += "</tr>";
 					itemText += "<tr class='border_bottom'>";
 					itemText += "<td colspan='5' align='left' width='1330px'></td>";
 					itemText += "</tr>";
-				}
+				}	
 			}
 			
 			itemText += "</tbody>";
@@ -255,19 +256,20 @@
 			document.getElementById('pannel').innerHTML="";
 			
 			var itemText = "";
-				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>";
-				itemText += "<tbody>";
+				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
 				itemText += "<tr bgcolor='#757561'>";
-				itemText += "<td class='expfirst' align='left' width='800px'>Name</td>";
-				itemText += "<td class='expfirst' align='left' width='100px'>Size</td>";
-				itemText += "<td class='expfirst' align='left' width='100px'>Type</td>";	
-				itemText += "<td class='expfirst' align='left' width='180px'>Last Modified</td>";
-				itemText += "<td class='expfirst' align='left' width='150px'>Actions</td>";			
+				itemText += "<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
+				itemText += "<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
+				itemText += "<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
+				itemText += "<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
+				itemText += "<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
 				itemText += "</tr>";
+				itemText += "</table>";
+				itemText += "<table class='hoverRow' width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
+				itemText += "<tbody>";
 				
 			if(username !="")
-			{
-						
+			{	
 				//Save current path
 			 	path = extractCurrentPath(arrayContentBeans[0].attributes.name);
 			 	
@@ -288,11 +290,11 @@
 					if(key==0 && path!=home)
 					{
 						itemText += "<tr>";
-						itemText += "<td align='left' width='800px'>" + "<a href='#' onclick='javascript:levelUp();'>../</a></td>";
-						itemText += "<td align='left' width='100px'> - </td>";
-						itemText += "<td align='left' width='100px'>Directory</td>";	
-						itemText += "<td align='left' width='180px'></td>";
-						itemText += "<td align='left' width='150px'></td>";
+						itemText += "<td align='left' width='800px' height='40px'>" + "<a href='#' onclick='javascript:levelUp();'>../</a></td>";
+						itemText += "<td align='left' width='100px' height='40px'> - </td>";
+						itemText += "<td align='left' width='100px' height='40px'>Directory</td>";	
+						itemText += "<td align='left' width='180px' height='40px'></td>";
+						itemText += "<td align='left' width='150px' height='40px'></td>";
 						itemText += "</tr>";
 						itemText += "<tr class='border_bottom'>";
 						itemText += "<td colspan='5' align='left' width='1330px'></td>";
@@ -300,16 +302,16 @@
 					}
 										
 					itemText += "<tr>";
-					itemText += "<td align='left' width='800px'>" + "<a href='#' onclick='javascript:loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + oContentBean.attributes.name + "</a></td>";
+					itemText += "<td align='left' width='800px'>" + "<a href='#' onclick='javascript:loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + removeAbsolutePath(oContentBean.attributes.name) + "</a></td>";
 					itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
 					itemText += "<td align='left' width='100px'>" + sType + "</td>";	
 					itemText += "<td align='left' width='180px'>" + sDate + "</td>";
 					
 					// Only for RDF
 					if(oContentBean.attributes.type == true){
-						itemText += "<td align='left' width='150px'>" + + "</td>";			
+						itemText += "<td align='left' width='150px' height='40px'>" + + "</td>";			
 					}else{
-						itemText += "<td align='left' width='150px'></td>";			
+						itemText += "<td align='left' width='150px' height='40px'></td>";			
 					}
 						
 					itemText += "</tr>";

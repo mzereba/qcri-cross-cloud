@@ -1,7 +1,7 @@
 /*
- * Streaming Server
+ * Cross Cloud
  *
- * Last Modified: 24 October 2013
+ * Aug 31, 2014
  *
  */
  
@@ -179,5 +179,34 @@
  
  tr.border_bottom td {
   border-bottom: 1px dotted #000000;
-}
+	}
  
+ a:link {
+	color: #757561;
+	text-decoration: none;
+	font-weight: bold;
+ }
+ 
+ a:visited {
+	color: #757561;
+	text-decoration: none;
+	font-weight: bold;
+ }
+ 
+ a:active {
+	color: #757561;
+	text-decoration: none;
+	font-weight: bold;
+ }
+ 
+ a:hover {
+	color: #72CE9B;
+	text-decoration: none;
+	font-weight: bold;
+ }
+ 
+ .hoverRow tr:hover {
+	background-color: #F0F0F0;
+ }
+
+

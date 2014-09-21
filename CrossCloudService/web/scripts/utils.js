@@ -43,6 +43,16 @@ function extractCurrentPath(path){
 	return result;
 }
 
+//Extract relative path
+function removeAbsolutePath(path){
+	var result = "";
+	var parts = path.split("/");
+	for (var i = 3; i < parts.length-1; i++) {
+		result += parts[i] + "/";
+	}
+	return result;
+}
+
 //Level up
 function levelUp(){
 	var parent = extractCurrentPath(path);
