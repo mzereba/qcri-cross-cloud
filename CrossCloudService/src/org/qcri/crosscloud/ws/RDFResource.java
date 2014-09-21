@@ -58,9 +58,9 @@ public class RDFResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String retrieve(@QueryParam("username") String Username, @QueryParam("path") String Path) {
 	    
-		//ArrayList<ContentBean> lContentBeans = getAnswers("http://ahmedelroby.rww.io/profile/card#me", Path);
+		ArrayList<ContentBean> lContentBeans = getAnswers("http://ahmedelroby.rww.io/", Path);
     
-	//*//	
+	/*//	
 		ContentBean oContentBean = buildResult(Username, Path);
      	List<ContentBean> lContentBeans = new ArrayList<ContentBean>();
     	lContentBeans.add(oContentBean);
@@ -163,7 +163,11 @@ public class RDFResource {
 		
 		//Scenario of retrieving an element that is a Directory (so no ACL)
 		AttributesBean aB = new AttributesBean();
-		aB.setName("profile/"); //From request
+		if("".equals(sPath)){
+			aB.setName("profile/");
+		}else{
+			aB.setName("profile/card/"); //From request
+		}
 		aB.setType(false);  //Hard coded for testing purposes
 		aB.setSize(0.2);   //Hard coded for testing purposes
 		aB.setLastModified(new Date());

@@ -22,6 +22,7 @@
 
 	<script type="text/javascript">
 		// Variables initialization
+		var home = "";
 		var path = "";
 		var username = "";
 		var arrayContentBeans;
@@ -170,7 +171,11 @@
 							//});
 			      	   });
 						
-			      	   renderContent();
+			      	   if(path != ""){
+			      	   	renderContent();
+			      	   }else{
+			      	   	renderContentLogin();
+			      	   }
 					},
 					error: function(resp, status, xhr){
 						$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
@@ -183,14 +188,12 @@
 	</script>
 	
 	<script type="text/javascript">
-		// The main function to render the content
-		function renderContent()
+		// The function to render the content the first time after login
+		function renderContentLogin()
 		{
 			document.getElementById('pannel').innerHTML="";
 			
-			if(username !="")
-			{
-				var itemText = "";
+			var itemText = "";
 				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>";
 				itemText += "<tbody>";
 				itemText += "<tr bgcolor='#757561'>";
@@ -201,8 +204,17 @@
 				itemText += "<td class='expfirst' align='left' width='150px'>Actions</td>";			
 				itemText += "</tr>";
 				
+			if(username !="")
+			{
+						
+				//Save current path
+			 	path = extractCurrentPath(arrayContentBeans[0].attributes.name);
+			 	home = path;
+			 	
 				for (var key in arrayContentBeans) {
-			 		var oContentBean = arrayContentBeans[key];
+					var oContentBean = arrayContentBeans[key];
+					
+					//Check if Directory or RDF
 					var sType;
 					if(oContentBean.attributes.type == false){
 						sType = "Directory";
@@ -212,8 +224,8 @@
 					
 					var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
 										
-					itemText += "<tr class='border_bottom'>";
-					itemText += "<td align='left' width='800px'>" + oContentBean.attributes.name + "</td>";
+					itemText += "<tr>";
+					itemText += "<td align='left' width='800px'>" + "<a href='#' onclick='javascript:loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + oContentBean.attributes.name + "</a></td>";
 					itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
 					itemText += "<td align='left' width='100px'>" + sType + "</td>";	
 					itemText += "<td align='left' width='180px'>" + sDate + "</td>";
@@ -226,12 +238,90 @@
 					}
 						
 					itemText += "</tr>";
+					itemText += "<tr class='border_bottom'>";
+					itemText += "<td colspan='5' align='left' width='1330px'></td>";
+					itemText += "</tr>";
 				}
-						
-				itemText += "</tbody>";
-				itemText += "</table>";
-				document.getElementById('pannel').innerHTML=itemText;
 			}
+			
+			itemText += "</tbody>";
+			itemText += "</table>";
+			document.getElementById('pannel').innerHTML=itemText;
+		}
+		
+		// The main function to render the content
+		function renderContent()
+		{
+			document.getElementById('pannel').innerHTML="";
+			
+			var itemText = "";
+				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>";
+				itemText += "<tbody>";
+				itemText += "<tr bgcolor='#757561'>";
+				itemText += "<td class='expfirst' align='left' width='800px'>Name</td>";
+				itemText += "<td class='expfirst' align='left' width='100px'>Size</td>";
+				itemText += "<td class='expfirst' align='left' width='100px'>Type</td>";	
+				itemText += "<td class='expfirst' align='left' width='180px'>Last Modified</td>";
+				itemText += "<td class='expfirst' align='left' width='150px'>Actions</td>";			
+				itemText += "</tr>";
+				
+			if(username !="")
+			{
+						
+				//Save current path
+			 	path = extractCurrentPath(arrayContentBeans[0].attributes.name);
+			 	
+				for (var key in arrayContentBeans) {
+					var oContentBean = arrayContentBeans[key];
+					
+					//Check if Directory or RDF
+					var sType;
+					if(oContentBean.attributes.type == false){
+						sType = "Directory";
+					}else{
+						sType = "RDF";
+					}
+					
+					var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
+					
+					//Check if it's first retrieve on login request, in order to not show "../" since already in user home
+					if(key==0 && path!=home)
+					{
+						itemText += "<tr>";
+						itemText += "<td align='left' width='800px'>" + "<a href='#' onclick='javascript:levelUp();'>../</a></td>";
+						itemText += "<td align='left' width='100px'> - </td>";
+						itemText += "<td align='left' width='100px'>Directory</td>";	
+						itemText += "<td align='left' width='180px'></td>";
+						itemText += "<td align='left' width='150px'></td>";
+						itemText += "</tr>";
+						itemText += "<tr class='border_bottom'>";
+						itemText += "<td colspan='5' align='left' width='1330px'></td>";
+						itemText += "</tr>";
+					}
+										
+					itemText += "<tr>";
+					itemText += "<td align='left' width='800px'>" + "<a href='#' onclick='javascript:loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + oContentBean.attributes.name + "</a></td>";
+					itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
+					itemText += "<td align='left' width='100px'>" + sType + "</td>";	
+					itemText += "<td align='left' width='180px'>" + sDate + "</td>";
+					
+					// Only for RDF
+					if(oContentBean.attributes.type == true){
+						itemText += "<td align='left' width='150px'>" + + "</td>";			
+					}else{
+						itemText += "<td align='left' width='150px'></td>";			
+					}
+						
+					itemText += "</tr>";
+					itemText += "<tr class='border_bottom'>";
+					itemText += "<td colspan='5' align='left' width='1330px'></td>";
+					itemText += "</tr>";
+				}
+			}
+			
+			itemText += "</tbody>";
+			itemText += "</table>";
+			document.getElementById('pannel').innerHTML=itemText;
 		}
 	</script>	
 </head>
@@ -274,7 +364,17 @@
 		<fieldset style="padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;" width="1320px;">
 		  		<!-- Table -->
 				<div id="pannel">
-				
+					<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>
+						<tbody>
+							<tr bgcolor='#757561'>
+								<td class='expfirst' align='left' width='800px'>Name</td>
+								<td class='expfirst' align='left' width='100px'>Size</td>
+								<td class='expfirst' align='left' width='100px'>Type</td>
+								<td class='expfirst' align='left' width='180px'>Last Modified</td>
+								<td class='expfirst' align='left' width='150px'>Actions</td>			
+							</tr>
+						</tbody>
+					</table>
 				</div>
 		</fieldset>
 						
