@@ -1,11 +1,11 @@
-<project name="CrossCloudService" default="deploy.local" basedir="..">
+<project name="CrossCloudBrowsingService" default="deploy.local" basedir="..">
 	
   <property name="institution" value="qcri"/>
   <property name="group" value="qcri"/>
   <property name="base_package.dir" value="org/${institution}"/>
-  <property name="base_package.crosscloudservice" value="crosscloudservice"/>
+  <property name="base_package.browsing" value="browsing"/>
 
-  <property name="system.name" value="crosscloudservice"/>
+  <property name="system.name" value="browsing"/>
   <property name="jar.name" value="${system.name}.jar"/>
   <property name="xml.jar.name" value="${system.name}-xml.jar"/>
   <property name="war.name" value="${system.name}.war"/>
@@ -37,7 +37,7 @@
   <property name="dist.tld" value="${dist.webinf}/tld"/>
   <property name="dist.doc" value="${dist.dir}/doc"/>
 	  
-  <property name="tomcat.home" value="C:\apache-tomcat-6.0.18\webapps"/>
+  <property name="tomcat.home" value="C:\apache-tomcat-7.0.52"/>
   <property name="tomcat.logs" value="${tomcat.home}/logs"/>
   <property name="tomcat.log.common" value="${tomcat.logs}/common.log"/>
   <property name="tomcat.log.instance" value="${tomcat.logs}/${system.name}.log"/>

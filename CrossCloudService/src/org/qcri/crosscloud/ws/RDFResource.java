@@ -32,6 +32,10 @@ import server.query.QueryManager;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.update.UpdateExecutionFactory;
+import com.hp.hpl.jena.update.UpdateFactory;
+import com.hp.hpl.jena.update.UpdateProcessor;
+import com.hp.hpl.jena.update.UpdateRequest;
 import com.sun.jersey.spi.resource.Singleton;
 
 
@@ -48,6 +52,45 @@ public class RDFResource {
 	 * Method for parsing REST request
 	 * 
 	 * @param Username
+	 * @param Password
+	 * 
+	 * @return The list of ContentBeans to set in the response if it is valid user
+	 */
+	@GET
+	@XmlElement(name = "contentbean")
+	@Path("/loginCheck")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String loginCheck(@QueryParam("username") String Username, @QueryParam("password") String password) {
+	    
+		ArrayList<ContentBean> lContentBeans;
+		if(isValidUser(Username,password))
+		{
+		
+		ContentBean oContentBean = buildResult(Username, ""); // hard coded username and path
+     	lContentBeans = new ArrayList<ContentBean>();
+    	lContentBeans.add(oContentBean);
+		}
+		else 
+		{
+    
+	//*//	
+		ContentBean oContentBean = buildResult("-", ""); // empty username and path
+     	lContentBeans = new ArrayList<ContentBean>();
+    	lContentBeans.add(oContentBean);
+   //*/ 	
+		}
+		
+		
+		String jsonString = serializeListToJSON(lContentBeans);
+		
+		return jsonString;
+	}
+	
+	
+	/**
+	 * Method for parsing REST request
+	 * 
+	 * @param Username
 	 * @param Path
 	 * 
 	 * @return The list of ContentBeans to set in the response
@@ -58,7 +101,8 @@ public class RDFResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String retrieve(@QueryParam("username") String Username, @QueryParam("path") String Path) {
 	    
-		ArrayList<ContentBean> lContentBeans = getAnswers("http://ahmedelroby.rww.io/", Path);
+		Username = "http://" + Username + ".ldm.io/" ;
+		ArrayList<ContentBean> lContentBeans = getAnswers(Username, Path);
     
 	/*//	
 		ContentBean oContentBean = buildResult(Username, Path);
@@ -100,8 +144,17 @@ public class RDFResource {
 				// Fill AttributeBean
 				AttributesBean aB = new AttributesBean();
 				aB.setName(x.toString());
-				aB.setType(false);
-				aB.setSize(-1);
+				if(x.toString().endsWith("/"))
+				{
+					aB.setType(false);
+					aB.setSize(-1);
+				}
+				else
+					{
+					aB.setType(true);
+					aB.setSize(40);
+					}
+				
 				aB.setLastModified(new Date());
 				
 				// ACLBean Empty
@@ -163,15 +216,18 @@ public class RDFResource {
 		
 		//Scenario of retrieving an element that is a Directory (so no ACL)
 		AttributesBean aB = new AttributesBean();
+		
+		/*/
 		if("".equals(sPath)){
 			aB.setName("profile/");
 		}else{
 			aB.setName("profile/card/"); //From request
 		}
+		
 		aB.setType(false);  //Hard coded for testing purposes
 		aB.setSize(0.2);   //Hard coded for testing purposes
 		aB.setLastModified(new Date());
-		
+		//*/
 		ACLBean aclB = new ACLBean();
 		RDFBean rdfB = new RDFBean();
 		
@@ -212,6 +268,35 @@ public class RDFResource {
 		}
 		
 		return jsonS;
+	}
+	
+	public void deleteFile(String fileToDelete){
+		UpdateRequest request = UpdateFactory.create();
+		request.add("DELETE {<" + fileToDelete + "> ?p ?o} WHERE {SELECT ?p ?o WHERE{<" + fileToDelete + "> ?p ?o}}");
+		request.add("DELETE {?s ?p <" + fileToDelete + ">} WHERE {SELECT ?s ?p ?o WHERE{?s ?p <" + fileToDelete + ">}}");
+		UpdateProcessor processor = UpdateExecutionFactory.createRemote(request, "http://localhost:3030/ds/update");
+		processor.execute();
+	}
+	
+	public void updateFile(String filePath, String updatedFile){
+		deleteFile(filePath);
+		UpdateRequest request = UpdateFactory.create();
+		request.add("INSERT DATA {" + updatedFile + "}");
+		request.add("INSERT DATA {<" + filePath.substring(0, filePath.lastIndexOf("/")+1)+ "> <http://www.w3.org/ns/ldp#contains> <" + filePath + ">}");
+		UpdateProcessor processor = UpdateExecutionFactory.createRemote(request, "http://localhost:3030/ds/update");
+		processor.execute();
+	}
+	
+	private boolean isValidUser(String username, String password)
+	{
+		boolean valid = false;
+		if ( (username.equals("essam")&& password.equals("essam")) ||
+			 (username.equals("ahmedelroby")&& password.equals("ahmedelroby")) ||
+			 (username.equals("maged")&& password.equals("maged"))
+			)
+			valid = true;
+		
+		return valid;
 	}
 
 }

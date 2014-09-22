@@ -37,8 +37,14 @@ function buildStringFromDate(date){
 function extractCurrentPath(path){
 	var result = "";
 	var parts = path.split("/");
-	for (var i = 0; i < parts.length-2; i++) {
-		result += parts[i] + "/";
+	if(path.charAt(path.length - 1) == "/"){
+		for (var i = 0; i < parts.length-2; i++) {
+			result += parts[i] + "/";
+		}
+	}else{
+		for (var i = 0; i < parts.length-1; i++) {
+			result += parts[i] + "/";
+		}
 	}
 	return result;
 }
@@ -47,8 +53,18 @@ function extractCurrentPath(path){
 function removeAbsolutePath(path){
 	var result = "";
 	var parts = path.split("/");
-	for (var i = 3; i < parts.length-1; i++) {
-		result += parts[i] + "/";
+	if(path.charAt(path.length - 1) == "/"){
+		for (var i = 3; i < parts.length-1; i++) {
+			result += parts[i] + "/";
+		}
+	}else{
+		for (var i = 3; i < parts.length; i++) {
+			if(i != (parts.length-1)){
+				result += parts[i] + "/";
+			}else{
+				result += parts[i];
+			}
+		}
 	}
 	return result;
 }

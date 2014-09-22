@@ -41,113 +41,220 @@
 	</script>
 	
 	<script type="text/javascript">
-	function doLogin()
-	{
-		username = document.getElementById('username').value;
-		refreshLoginBox();
-	}
-	
-	function doLogout()
-	{
-		username = "";
-		path = "";
-		refreshLoginBox();
-	}
-	
-	function refreshLoginBox()
-	{
-		if(username == ""){
-			var itemText = "";
-			itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
-	   		itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
-			itemText +=	"<img src='images/logo.png' />";
-			itemText += "</fieldset>";
-			
-			itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;'></fieldset>";
-			itemText += "<!-- Form -->";
-			itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;'>";
-			itemText +=	" <table>";
-			itemText +=	"	<tr>";
-			itemText +=	"		<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Username</b></font></td>";
-			itemText +=	"		<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Password</b></font></td>";
-			itemText +=	"		<td align='left' style='vertical-align:bottom;width:100px;'><font color='#757561'><b>End point</b></font></td>";
-			itemText +=	"	</tr>";
-			itemText +=	"	<tr>";
-			itemText +=	"		<td align='left'><input name='username' id='username' type='text' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
-			itemText +=	"		<td align='left'><input name='password' id='password' type='password' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
-			itemText +=	"		<td align='left'><input name='endpoint' id='endpoint' type='text' style='border: 1px dotted #72CE9B;' width='100px' size='15' value=''></td>";
-			itemText +=	"		<td align='left' style='vertical-align:top;'>";
-			itemText +=	"			<input type='button' id='login' value='Login' onClick='doLogin();'>";
-			itemText +=	"		</td>";
-			itemText +=	"	</tr>";
-			itemText +=	" </table>";
-			itemText += "</fieldset>";
-			itemText += "</fieldset>";
-		
-			itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
-			itemText += "	<hr class='bar' /> ";
-		    itemText += "</fieldset>";
-				
-		    itemText += "<!-- Middle pannel -->";
-		    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
-		  	itemText +=	"	<!-- Table -->";
-			itemText +=	"	<div id='pannel'>";
-				
-			itemText +=	"	</div>";
-		    itemText += "</fieldset>";
-						
-			itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
-			itemText +=	"	<hr class='bar'/> ";
-			itemText += "</fieldset>";
-			
-			document.getElementById('container').innerHTML=itemText;
-			
-			renderContent();
-			
-		}else{
-			var itemText = "";
-			itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
-	   		itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
-			itemText +=	"<img src='images/logo.png' />";
-			itemText += "</fieldset>";
-			
-			itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:975px;'></fieldset>";
-			itemText += "<!-- Form -->";
-			itemText += "<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:130px; margin-top: 55px;'>";
-			itemText +=	"<table>";
-			itemText +=	"	<tr>";
-			itemText +=	"		<td align='left' style='vertical-align:bottom;width:50px;'><img src='images/profile-portrait.png' style='border: 1px dotted #72CE9B;'></td>";
-			itemText +=	"		<td align='left' style='vertical-align:top;width:85px;'>";
-			itemText +=	"			&nbsp;<font color='#757561'><b>" + username + "</b></font><br>";
-			itemText +=	"			<input type='button' id='login' value='Logout' onClick='doLogout();'>";
-			itemText +=	"		</td>";
-			itemText +=	"	</tr>";
-			itemText +=	"	</table>";
-			itemText += "</fieldset>";
-			
-			itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
-			itemText += "	<hr class='bar' /> ";
-		    itemText += "</fieldset>";
-				
-		    itemText += "<!-- Middle pannel -->";
-		    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
-		  	itemText +=	"	<!-- Table -->";
-			itemText +=	"	<div id='pannel'>";
-				
-			itemText +=	"	</div>";
-		    itemText += "</fieldset>";
-						
-			itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
-			itemText +=	"	<hr class='bar'/> ";
-			itemText += "</fieldset>";
-			
-			document.getElementById('container').innerHTML=itemText;
-			
-			loadContent(username, path);
+		//Login function
+		function doLogin()
+		{
+			username = document.getElementById('username').value;
+			var sPassword = document.getElementById('password').value;
+			var user;
+			var sUrl = "http://localhost:8080/browsing/services/RDF/loginCheck?username="+username+"&password="+sPassword;
+			$.ajax({
+					type: "GET",
+					url: sUrl,
+					contentType: "application/json",
+					dataType: "json",
+					async: false,
+					success: function parse(resp, status, xhr) {
+					   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+					   $("#message").hide();
+					   $.each(resp, function() {
+							//arrayContentBeans.push(this);
+							user = resp[0].username;
+			      	   });
+					
+			      	   refreshLoginBox(user);
+
+					},
+					error: function(resp, status, xhr){
+						$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+						$("#message").show();
+					}
+				});
 		}
 		
-		
-	}
+		//Logout function
+		function doLogout()
+		{
+			username = "";
+			path = "";
+			refreshLoginBox(username);
+		}
+	</script>
+	
+	<script type="text/javascript">
+		//Main function for rendering after login
+		function refreshLoginBox(user)
+		{
+			//Logout
+			if(user == ""){
+				var itemText = "";
+				itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
+		   		itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
+				itemText +=	"		<img src='images/logo.png' />";
+				itemText += "	</fieldset>";
+				
+				itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;margin-top:55px;text-align:center;'>";
+				itemText += "		<div id='login_message'> </div>";
+				itemText += "	</fieldset>";
+				
+				itemText += "	<!-- Form -->";
+				itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;'>";
+				itemText +=	" 		<table align='right'>";
+				itemText +=	"			<tr>";
+				itemText +=	"				<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Username</b></font></td>";
+				itemText +=	"				<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Password</b></font></td>";
+				itemText +=	"			</tr>";
+				itemText +=	"			<tr>";
+				itemText +=	"				<td align='left'><input name='username' id='username' type='text' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
+				itemText +=	"				<td align='left'><input name='password' id='password' type='password' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
+				itemText +=	"				<td align='left' style='vertical-align:top;'>";
+				itemText +=	"					<input type='button' id='login' value='Login' onClick='doLogin();'>";
+				itemText +=	"				</td>";
+				itemText +=	"			</tr>";
+				itemText +=	" 		</table>";
+				itemText += "	</fieldset>";
+				itemText += "</fieldset>";
+			
+				itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
+				itemText += "	<hr class='bar' /> ";
+			    itemText += "</fieldset>";
+					
+			    itemText += "<!-- Middle pannel -->";
+			    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
+			  	itemText +=	"	<!-- Pannel -->";
+				itemText +=	"	<div id='pannel'>";
+				itemText += "		<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
+				itemText += "			<tr bgcolor='#757561'>";
+				itemText += "				<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
+				itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
+				itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
+				itemText += "				<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
+				itemText += "				<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
+				itemText += "			</tr>";
+				itemText += "		</table>";
+				itemText +=	"	</div>";
+			    itemText += "</fieldset>";
+							
+				itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
+				itemText +=	"	<hr class='bar'/> ";
+				itemText += "</fieldset>";
+				
+				document.getElementById('container').innerHTML=itemText;
+				
+			}else{
+				//User not found, show error message
+				if(user == "-"){
+					var itemText = "";
+					itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
+			   		itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
+					itemText +=	"		<img src='images/logo.png' />";
+					itemText += "	</fieldset>";
+					
+					itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;margin-top:55px;text-align:center;'>";
+					itemText += "		<div id='login_message'> </div>";
+					itemText += "	</fieldset>";
+					
+					itemText += "	<!-- Form -->";
+					itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;'>";
+					itemText +=	" 		<table align='right'>";
+					itemText +=	"			<tr>";
+					itemText +=	"				<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Username</b></font></td>";
+					itemText +=	"				<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Password</b></font></td>";
+					itemText +=	"			</tr>";
+					itemText +=	"			<tr>";
+					itemText +=	"				<td align='left'><input name='username' id='username' type='text' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
+					itemText +=	"				<td align='left'><input name='password' id='password' type='password' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
+					itemText +=	"				<td align='left' style='vertical-align:top;'>";
+					itemText +=	"					<input type='button' id='login' value='Login' onClick='doLogin();'>";
+					itemText +=	"				</td>";
+					itemText +=	"			</tr>";
+					itemText +=	" 		</table>";
+					itemText += "	</fieldset>";
+					itemText += "</fieldset>";
+				
+					itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
+					itemText += "	<hr class='bar' /> ";
+				    itemText += "</fieldset>";
+						
+				    itemText += "<!-- Middle pannel -->";
+				    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
+				  	itemText +=	"	<!-- Pannel -->";
+					itemText +=	"	<div id='pannel'>";
+					itemText += "		<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
+					itemText += "			<tr bgcolor='#757561'>";
+					itemText += "				<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
+					itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
+					itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
+					itemText += "				<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
+					itemText += "				<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
+					itemText += "			</tr>";
+					itemText += "		</table>";
+					itemText +=	"	</div>";
+				    itemText += "</fieldset>";
+								
+					itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
+					itemText +=	"	<hr class='bar'/> ";
+					itemText += "</fieldset>";
+					
+					document.getElementById('container').innerHTML=itemText;
+					document.getElementById('login_message').innerHTML="<font color='red'><b>User not found, please try again</b></font>";
+				}
+				//User found, retrieve content
+				else{
+					var itemText = "";
+					itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
+			   		itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
+					itemText +=	"	<img src='images/logo.png' />";
+					itemText += "	</fieldset>";
+					
+					itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;margin-top:55px;text-align:center;'>";
+					itemText += "		<div id='login_message'> </div>";
+					itemText += "	</fieldset>";
+				
+					itemText += "	<!-- Form -->";
+					itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;'>";
+					itemText +=	"		<table align='right'>";
+					itemText +=	"			<tr>";
+					itemText +=	"				<td align='left' style='vertical-align:bottom;width:50px;'><img src='images/profile-portrait.png' style='border: 1px dotted #72CE9B;'></td>";
+					itemText +=	"				<td align='left' style='vertical-align:top;width:85px;'>";
+					itemText +=	"					&nbsp;<font color='#757561'><b>" + username + "</b></font><br>";
+					itemText +=	"					<input type='button' id='login' value='Logout' onClick='doLogout();'>";
+					itemText +=	"				</td>";
+					itemText +=	"			</tr>";
+					itemText +=	"		</table>";
+					itemText += "	</fieldset>";
+					itemText += "</fieldset>";
+					
+					itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
+					itemText += "	<hr class='bar' /> ";
+				    itemText += "</fieldset>";
+						
+				    itemText += "<!-- Middle pannel -->";
+				    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
+				  	itemText +=	"	<!-- Pannel -->";
+					itemText +=	"	<div id='pannel'>";
+					itemText += "		<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
+					itemText += "			<tr bgcolor='#757561'>";
+					itemText += "				<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
+					itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
+					itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
+					itemText += "				<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
+					itemText += "				<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
+					itemText += "			</tr>";
+					itemText += "		</table>";
+					itemText +=	"	</div>";
+				    itemText += "</fieldset>";
+								
+					itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
+					itemText +=	"	<hr class='bar'/> ";
+					itemText += "</fieldset>";
+					
+					document.getElementById('container').innerHTML=itemText;
+					
+					loadContent(username, path);
+				}
+			}
+		}
 	</script>
 	
 	<script type="text/javascript">
@@ -155,7 +262,7 @@
 		function loadContent(sUsername, sPath)
 		{
 			arrayContentBeans = new Array();
-			var sUrl = "http://localhost:8080/crosscloudservice/services/RDF/retrieveContent?username="+sUsername+"&path="+sPath;
+			var sUrl = "http://localhost:8080/browsing/services/RDF/retrieveContent?username="+sUsername+"&path="+sPath;
 			$.ajax({
 					type: "GET",
 					url: sUrl,
@@ -217,30 +324,30 @@
 					
 					//Check if Directory or RDF
 					var sType;
+					var sSize;
 					if(oContentBean.attributes.type == false){
 						sType = "Directory";
+						sSize = "-";
 					}else{
 						sType = "RDF";
+						sSize = oContentBean.attributes.size;
 					}
 					
 					var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
 										
-					itemText += "<tr>";
+					itemText += "<tr class='border_bottom'>";
 					itemText += "<td align='left' width='800px' height='40px'>" + "<a href='#' onclick='javascript:loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + removeAbsolutePath(oContentBean.attributes.name) + "</a></td>";
-					itemText += "<td align='left' width='100px' height='40px'>" + oContentBean.attributes.size + "</td>";
+					itemText += "<td align='left' width='100px' height='40px'>" + sSize + "</td>";
 					itemText += "<td align='left' width='100px' height='40px'>" + sType + "</td>";	
 					itemText += "<td align='left' width='180px' height='40px'>" + sDate + "</td>";
 					
-					// Only for RDF
+					//Show ACL only for RDF
 					if(oContentBean.attributes.type == true){
-						itemText += "<td align='left' width='150px' height='40px'>" + + "</td>";			
+						itemText += "<td align='left' width='150px' height='40px' valign='bottom'><img src='images/document_text_edit.gif' /></td>";			
 					}else{
 						itemText += "<td align='left' width='150px' height='40px'></td>";			
 					}
 						
-					itemText += "</tr>";
-					itemText += "<tr class='border_bottom'>";
-					itemText += "<td colspan='5' align='left' width='1330px'></td>";
 					itemText += "</tr>";
 				}	
 			}
@@ -278,10 +385,13 @@
 					
 					//Check if Directory or RDF
 					var sType;
+					var sSize;
 					if(oContentBean.attributes.type == false){
 						sType = "Directory";
+						sSize = "-";
 					}else{
 						sType = "RDF";
+						sSize = oContentBean.attributes.size;
 					}
 					
 					var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
@@ -289,34 +399,28 @@
 					//Check if it's first retrieve on login request, in order to not show "../" since already in user home
 					if(key==0 && path!=home)
 					{
-						itemText += "<tr>";
+						itemText += "<tr class='border_bottom'>";
 						itemText += "<td align='left' width='800px' height='40px'>" + "<a href='#' onclick='javascript:levelUp();'>../</a></td>";
 						itemText += "<td align='left' width='100px' height='40px'> - </td>";
 						itemText += "<td align='left' width='100px' height='40px'>Directory</td>";	
 						itemText += "<td align='left' width='180px' height='40px'></td>";
 						itemText += "<td align='left' width='150px' height='40px'></td>";
 						itemText += "</tr>";
-						itemText += "<tr class='border_bottom'>";
-						itemText += "<td colspan='5' align='left' width='1330px'></td>";
-						itemText += "</tr>";
 					}
 										
-					itemText += "<tr>";
+					itemText += "<tr class='border_bottom'>";
 					itemText += "<td align='left' width='800px'>" + "<a href='#' onclick='javascript:loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + removeAbsolutePath(oContentBean.attributes.name) + "</a></td>";
-					itemText += "<td align='left' width='100px'>" + oContentBean.attributes.size + "</td>";
+					itemText += "<td align='left' width='100px'>" + sSize + "</td>";
 					itemText += "<td align='left' width='100px'>" + sType + "</td>";	
 					itemText += "<td align='left' width='180px'>" + sDate + "</td>";
 					
-					// Only for RDF
+					//Show ACL only for RDF
 					if(oContentBean.attributes.type == true){
-						itemText += "<td align='left' width='150px' height='40px'>" + + "</td>";			
+						itemText += "<td align='left' width='150px' height='40px' valign='bottom'><img src='images/document_text_edit.gif' /></td>";			
 					}else{
 						itemText += "<td align='left' width='150px' height='40px'></td>";			
 					}
 						
-					itemText += "</tr>";
-					itemText += "<tr class='border_bottom'>";
-					itemText += "<td colspan='5' align='left' width='1330px'></td>";
 					itemText += "</tr>";
 				}
 			}
@@ -337,19 +441,22 @@
 				<img src="images/logo.png" />
 			</fieldset>
 			
-			<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;"></fieldset>
+			<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;margin-top:55px;text-align:center;">
+				<div id="login_message">
+					
+				</div>
+			</fieldset>
+			
 			<!-- Form -->
 			<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;">
-				<table>
+				<table align="right">
 					<tr>
 						<td align="left" style="vertical-align:bottom;width:85px;"><font color="#757561"><b>Username</b></font></td>
 						<td align="left" style="vertical-align:bottom;width:85px;"><font color="#757561"><b>Password</b></font></td>
-						<td align="left" style="vertical-align:bottom;width:100px;"><font color="#757561"><b>End point</b></font></td>
 					</tr>
 					<tr>
 						<td align="left"><input name="username" id="username" type="text" style="border: 1px dotted #72CE9B;" width="85px" size="10" value=""></td>
 						<td align="left"><input name="password" id="password" type="password" style="border: 1px dotted #72CE9B;" width="85px" size="10" value=""></td>
-						<td align="left"><input name="endpoint" id="endpoint" type="text" style="border: 1px dotted #72CE9B;" width="100px" size="15" value=""></td>
 						<td align="left" style="vertical-align:top;">
 							<input type="button" id="login" value="Login" onClick="doLogin();">
 						</td>
@@ -364,16 +471,16 @@
 				
 		<!-- Middle pannel -->
 		<fieldset style="padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;" width="1320px;">
-		  		<!-- Table -->
+		  		<!-- Pannel -->
 				<div id="pannel">
-					<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 1px solid #72CE9B;'>
+					<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>
 						<tbody>
 							<tr bgcolor='#757561'>
-								<td class='expfirst' align='left' width='800px'>Name</td>
-								<td class='expfirst' align='left' width='100px'>Size</td>
-								<td class='expfirst' align='left' width='100px'>Type</td>
-								<td class='expfirst' align='left' width='180px'>Last Modified</td>
-								<td class='expfirst' align='left' width='150px'>Actions</td>			
+								<td class='expfirst' align='left' width='800px' height='40px'>Name</td>
+								<td class='expfirst' align='left' width='100px' height='40px'>Size</td>
+								<td class='expfirst' align='left' width='100px' height='40px'>Type</td>
+								<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>
+								<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>			
 							</tr>
 						</tbody>
 					</table>
