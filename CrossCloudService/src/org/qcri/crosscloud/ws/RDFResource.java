@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -47,6 +48,25 @@ import com.sun.jersey.spi.resource.Singleton;
 @Path("RDF")
 @Singleton
 public class RDFResource {
+	
+	
+	/**
+	 * Method for parsing REST request
+	 * 
+	 * @param Path
+	 * 
+	 * @delete The list of ContentBeans to set in the response
+	 */
+	@DELETE
+	@XmlElement(name = "contentbean")
+	@Path("/delete")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void delete(@QueryParam("path") String Path) {
+	    
+		deleteURI(Path);
+		
+		
+	}
 		 
 	/**
 	 * Method for parsing REST request
@@ -270,18 +290,18 @@ public class RDFResource {
 		return jsonS;
 	}
 	
-	public void deleteFile(String fileToDelete){
+	public void deleteURI(String uriToDelete){
 		UpdateRequest request = UpdateFactory.create();
-		request.add("DELETE {<" + fileToDelete + "> ?p ?o} WHERE {SELECT ?p ?o WHERE{<" + fileToDelete + "> ?p ?o}}");
-		request.add("DELETE {?s ?p <" + fileToDelete + ">} WHERE {SELECT ?s ?p ?o WHERE{?s ?p <" + fileToDelete + ">}}");
+		request.add("DELETE {<" + uriToDelete + "> ?p ?o} WHERE {SELECT ?p ?o WHERE{<" + uriToDelete + "> ?p ?o}}");
+		request.add("DELETE {?s ?p <" + uriToDelete + ">} WHERE {SELECT ?s ?p ?o WHERE{?s ?p <" + uriToDelete + ">}}");
 		UpdateProcessor processor = UpdateExecutionFactory.createRemote(request, "http://localhost:3030/ds/update");
 		processor.execute();
 	}
 	
-	public void updateFile(String filePath, String updatedFile){
-		deleteFile(filePath);
+	public void updateURI(String filePath, String updatedURI){
+		deleteURI(filePath);
 		UpdateRequest request = UpdateFactory.create();
-		request.add("INSERT DATA {" + updatedFile + "}");
+		request.add("INSERT DATA {" + updatedURI + "}");
 		request.add("INSERT DATA {<" + filePath.substring(0, filePath.lastIndexOf("/")+1)+ "> <http://www.w3.org/ns/ldp#contains> <" + filePath + ">}");
 		UpdateProcessor processor = UpdateExecutionFactory.createRemote(request, "http://localhost:3030/ds/update");
 		processor.execute();

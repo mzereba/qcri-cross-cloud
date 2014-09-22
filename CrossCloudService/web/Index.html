@@ -47,8 +47,9 @@
 			username = document.getElementById('username').value;
 			var sPassword = document.getElementById('password').value;
 			var user;
-			var sUrl = "http://localhost:8080/browsing/services/RDF/loginCheck?username="+username+"&password="+sPassword;
-			$.ajax({
+			if(username != "" && sPassword != ""){
+				var sUrl = "http://localhost:8080/browsing/services/RDF/loginCheck?username="+username+"&password="+sPassword;
+				$.ajax({
 					type: "GET",
 					url: sUrl,
 					contentType: "application/json",
@@ -70,6 +71,9 @@
 						$("#message").show();
 					}
 				});
+			}else{
+				document.getElementById('login_message').innerHTML="<font color='red'><b>Please insert username and password</b></font>";
+			}		
 		}
 		
 		//Logout function
@@ -79,181 +83,29 @@
 			path = "";
 			refreshLoginBox(username);
 		}
-	</script>
-	
-	<script type="text/javascript">
-		//Main function for rendering after login
-		function refreshLoginBox(user)
+		
+		//Delete RDF
+		function doDelete(path)
 		{
-			//Logout
-			if(user == ""){
-				var itemText = "";
-				itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
-		   		itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
-				itemText +=	"		<img src='images/logo.png' />";
-				itemText += "	</fieldset>";
-				
-				itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;margin-top:55px;text-align:center;'>";
-				itemText += "		<div id='login_message'> </div>";
-				itemText += "	</fieldset>";
-				
-				itemText += "	<!-- Form -->";
-				itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;'>";
-				itemText +=	" 		<table align='right'>";
-				itemText +=	"			<tr>";
-				itemText +=	"				<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Username</b></font></td>";
-				itemText +=	"				<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Password</b></font></td>";
-				itemText +=	"			</tr>";
-				itemText +=	"			<tr>";
-				itemText +=	"				<td align='left'><input name='username' id='username' type='text' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
-				itemText +=	"				<td align='left'><input name='password' id='password' type='password' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
-				itemText +=	"				<td align='left' style='vertical-align:top;'>";
-				itemText +=	"					<input type='button' id='login' value='Login' onClick='doLogin();'>";
-				itemText +=	"				</td>";
-				itemText +=	"			</tr>";
-				itemText +=	" 		</table>";
-				itemText += "	</fieldset>";
-				itemText += "</fieldset>";
-			
-				itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
-				itemText += "	<hr class='bar' /> ";
-			    itemText += "</fieldset>";
-					
-			    itemText += "<!-- Middle pannel -->";
-			    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
-			  	itemText +=	"	<!-- Pannel -->";
-				itemText +=	"	<div id='pannel'>";
-				itemText += "		<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
-				itemText += "			<tr bgcolor='#757561'>";
-				itemText += "				<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
-				itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
-				itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
-				itemText += "				<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
-				itemText += "				<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
-				itemText += "			</tr>";
-				itemText += "		</table>";
-				itemText +=	"	</div>";
-			    itemText += "</fieldset>";
-							
-				itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
-				itemText +=	"	<hr class='bar'/> ";
-				itemText += "</fieldset>";
-				
-				document.getElementById('container').innerHTML=itemText;
-				
-			}else{
-				//User not found, show error message
-				if(user == "-"){
-					var itemText = "";
-					itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
-			   		itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
-					itemText +=	"		<img src='images/logo.png' />";
-					itemText += "	</fieldset>";
-					
-					itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;margin-top:55px;text-align:center;'>";
-					itemText += "		<div id='login_message'> </div>";
-					itemText += "	</fieldset>";
-					
-					itemText += "	<!-- Form -->";
-					itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;'>";
-					itemText +=	" 		<table align='right'>";
-					itemText +=	"			<tr>";
-					itemText +=	"				<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Username</b></font></td>";
-					itemText +=	"				<td align='left' style='vertical-align:bottom;width:85px;'><font color='#757561'><b>Password</b></font></td>";
-					itemText +=	"			</tr>";
-					itemText +=	"			<tr>";
-					itemText +=	"				<td align='left'><input name='username' id='username' type='text' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
-					itemText +=	"				<td align='left'><input name='password' id='password' type='password' style='border: 1px dotted #72CE9B;' width='85px' size='10' value=''></td>";
-					itemText +=	"				<td align='left' style='vertical-align:top;'>";
-					itemText +=	"					<input type='button' id='login' value='Login' onClick='doLogin();'>";
-					itemText +=	"				</td>";
-					itemText +=	"			</tr>";
-					itemText +=	" 		</table>";
-					itemText += "	</fieldset>";
-					itemText += "</fieldset>";
-				
-					itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
-					itemText += "	<hr class='bar' /> ";
-				    itemText += "</fieldset>";
-						
-				    itemText += "<!-- Middle pannel -->";
-				    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
-				  	itemText +=	"	<!-- Pannel -->";
-					itemText +=	"	<div id='pannel'>";
-					itemText += "		<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
-					itemText += "			<tr bgcolor='#757561'>";
-					itemText += "				<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
-					itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
-					itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
-					itemText += "				<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
-					itemText += "				<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
-					itemText += "			</tr>";
-					itemText += "		</table>";
-					itemText +=	"	</div>";
-				    itemText += "</fieldset>";
-								
-					itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
-					itemText +=	"	<hr class='bar'/> ";
-					itemText += "</fieldset>";
-					
-					document.getElementById('container').innerHTML=itemText;
-					document.getElementById('login_message').innerHTML="<font color='red'><b>User not found, please try again</b></font>";
+			var sUrl = "http://localhost:8080/browsing/services/RDF/delete?path="+path;
+			$.ajax({
+				type: "DELETE",
+				url: sUrl,
+				contentType: "application/json",
+				dataType: "json",
+				async: false,
+				success: function parse(resp, status, xhr) {
+				   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+				   $("#message").hide();
+				   $("#login_message").html("Record succesfully deleted");
+		      	   refreshLoginBox(username);
+
+				},
+				error: function(resp, status, xhr){
+					$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+					$("#message").show();
 				}
-				//User found, retrieve content
-				else{
-					var itemText = "";
-					itemText += "<fieldset style='padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;'>";
-			   		itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;'>";
-					itemText +=	"	<img src='images/logo.png' />";
-					itemText += "	</fieldset>";
-					
-					itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;margin-top:55px;text-align:center;'>";
-					itemText += "		<div id='login_message'> </div>";
-					itemText += "	</fieldset>";
-				
-					itemText += "	<!-- Form -->";
-					itemText += "	<fieldset style='float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;'>";
-					itemText +=	"		<table align='right'>";
-					itemText +=	"			<tr>";
-					itemText +=	"				<td align='left' style='vertical-align:bottom;width:50px;'><img src='images/profile-portrait.png' style='border: 1px dotted #72CE9B;'></td>";
-					itemText +=	"				<td align='left' style='vertical-align:top;width:85px;'>";
-					itemText +=	"					&nbsp;<font color='#757561'><b>" + username + "</b></font><br>";
-					itemText +=	"					<input type='button' id='login' value='Logout' onClick='doLogout();'>";
-					itemText +=	"				</td>";
-					itemText +=	"			</tr>";
-					itemText +=	"		</table>";
-					itemText += "	</fieldset>";
-					itemText += "</fieldset>";
-					
-					itemText += "<fieldset style='padding:0px;border: none;' width='1320px;'>";
-					itemText += "	<hr class='bar' /> ";
-				    itemText += "</fieldset>";
-						
-				    itemText += "<!-- Middle pannel -->";
-				    itemText += "<fieldset style='padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;' width='1320px;'>";
-				  	itemText +=	"	<!-- Pannel -->";
-					itemText +=	"	<div id='pannel'>";
-					itemText += "		<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
-					itemText += "			<tr bgcolor='#757561'>";
-					itemText += "				<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
-					itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
-					itemText += "				<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
-					itemText += "				<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
-					itemText += "				<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
-					itemText += "			</tr>";
-					itemText += "		</table>";
-					itemText +=	"	</div>";
-				    itemText += "</fieldset>";
-								
-					itemText += "<fieldset style='padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;' width='1320px;'>";
-					itemText +=	"	<hr class='bar'/> ";
-					itemText += "</fieldset>";
-					
-					document.getElementById('container').innerHTML=itemText;
-					
-					loadContent(username, path);
-				}
-			}
+			});
 		}
 	</script>
 	
@@ -289,8 +141,7 @@
 						$("#message").show();
 					}
 					
-				});
-				
+				});	
 		}
 	</script>
 	
@@ -343,7 +194,7 @@
 					
 					//Show ACL only for RDF
 					if(oContentBean.attributes.type == true){
-						itemText += "<td align='left' width='150px' height='40px' valign='bottom'><img src='images/document_text_edit.gif' /></td>";			
+						itemText += "<td align='left' width='150px' height='40px' valign='bottom'><img src='images/document_text_edit.gif' />&nbsp;<a href='#' onclick='javascript:doDelete(\"" + oContentBean.attributes.name + "\");'><img src='images/document_delete.gif' /></a></td>";			
 					}else{
 						itemText += "<td align='left' width='150px' height='40px'></td>";			
 					}
@@ -416,7 +267,7 @@
 					
 					//Show ACL only for RDF
 					if(oContentBean.attributes.type == true){
-						itemText += "<td align='left' width='150px' height='40px' valign='bottom'><img src='images/document_text_edit.gif' /></td>";			
+						itemText += "<td align='left' width='150px' height='40px' valign='bottom'><img src='images/document_text_edit.gif' />&nbsp;<a href='#' onclick='javascript:doDelete(\"" + oContentBean.attributes.name + "\");'><img src='images/document_delete.gif' /></a></td>";						
 					}else{
 						itemText += "<td align='left' width='150px' height='40px'></td>";			
 					}
