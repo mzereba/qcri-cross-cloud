@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -64,6 +65,24 @@ public class RDFResource {
 	public void delete(@QueryParam("path") String Path) {
 	    
 		deleteURI(Path);
+		
+		
+	}
+	
+	/**
+	 * Method for parsing REST request
+	 * 
+	 * @param Path
+	 * 
+	 * @update The list of ContentBeans to set in the response
+	 */
+	@PUT
+	@XmlElement(name = "contentbean")
+	@Path("/update")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void update(@QueryParam("path") String Path, @QueryParam("path") String Content) {
+	    
+		updateURI(Path,Content);
 		
 		
 	}
@@ -298,11 +317,12 @@ public class RDFResource {
 		processor.execute();
 	}
 	
-	public void updateURI(String filePath, String updatedURI){
-		deleteURI(filePath);
+	public void updateURI(String URI, String Content){
+		deleteURI(URI);
+		//UpdateExecutionFactory.createRemote()
 		UpdateRequest request = UpdateFactory.create();
-		request.add("INSERT DATA {" + updatedURI + "}");
-		request.add("INSERT DATA {<" + filePath.substring(0, filePath.lastIndexOf("/")+1)+ "> <http://www.w3.org/ns/ldp#contains> <" + filePath + ">}");
+		request.add("INSERT DATA {" + Content + "}");
+		request.add("INSERT DATA {<" + URI.substring(0, URI.lastIndexOf("/")+1)+ "> <http://www.w3.org/ns/ldp#contains> <" + Content + ">}");
 		UpdateProcessor processor = UpdateExecutionFactory.createRemote(request, "http://localhost:3030/ds/update");
 		processor.execute();
 	}

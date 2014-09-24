@@ -77,6 +77,13 @@ function extractElement(path){
 	return result;
 }
 
+//Eliminate absolute prefix of URL
+function removePrefix(path){
+	var result = "";
+	var parts = path.split("://");
+	result += parts[1];
+	return result;
+}
 
 //Level up
 function levelUp(){
@@ -84,6 +91,7 @@ function levelUp(){
 	if(parent == home){
 		parent = "";
 	}
+	path = parent;
 	loadContent(username, parent);
 }
 
