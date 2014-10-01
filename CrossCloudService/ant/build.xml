@@ -1,11 +1,11 @@
-<project name="CrossCloudBrowsingService" default="deploy.local" basedir="..">
+<project name="CrossCloudService" default="deploy.local" basedir="..">
 	
   <property name="institution" value="qcri"/>
   <property name="group" value="qcri"/>
   <property name="base_package.dir" value="org/${institution}"/>
-  <property name="base_package.browsing" value="browsing"/>
+  <property name="base_package.LDM" value="LDM"/>
 
-  <property name="system.name" value="browsing"/>
+  <property name="system.name" value="LDM"/>
   <property name="jar.name" value="${system.name}.jar"/>
   <property name="xml.jar.name" value="${system.name}-xml.jar"/>
   <property name="war.name" value="${system.name}.war"/>

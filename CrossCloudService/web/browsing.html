@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+	<title>Browsing</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<!-- meta http-equiv="Refresh" content="3600" -->
+	
+	<link rel="stylesheet" type="text/css" href="css/stylehtml.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	
+	<style type="text/css">
+	  html { height: 100% }
+	  body { height: 100%; margin: 0; padding: 0 }
+	</style>
+	
+	<script type="text/javascript" src="scripts/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="scripts/jquery-ui.1.11.1.min.js"></script>
+	<script type="text/javascript" src="scripts/json.debug.js"></script>
+	
+	<script type="text/javascript" src="scripts/utils.js" djConfig="parseOnLoad: true"></script>
+
+	<script type="text/javascript">
+		// Variables initialization
+		var URL = "http://localhost:8080/LDM/";
+		var home = "";
+		var path = "";
+		var username = "";
+		var arrayContentBeans;
+	</script>
+	
+	<script type="text/javascript">
+		// Onload function
+		$(document).ready(function() {
+		   
+		});
+	</script>
+	
+	<script type="text/javascript">
+		//Login function
+		function doLogin()
+		{
+			username = document.getElementById('username').value;
+			var sPassword = document.getElementById('password').value;
+			var user;
+			if(username != "" && sPassword != ""){
+				var sUrl = URL + "services/RDF/login?username="+username+"&password="+sPassword;
+				$.ajax({
+					type: "GET",
+					url: sUrl,
+					contentType: "application/json",
+					dataType: "json",
+					async: false,
+					success: function parse(resp, status, xhr) {
+					   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+					   $("#message").hide();
+					   $.each(resp, function() {
+							//arrayContentBeans.push(this);
+							user = resp[0].username;
+			      	   });
+					
+			      	   refreshLoginBox(user);
+
+					},
+					error: function(resp, status, xhr){
+						$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+						$("#message").show();
+					}
+				});
+			}else{
+				document.getElementById('login_message').innerHTML="<font color='red'><b>Please insert username and password</b></font>";
+			}		
+		}
+		
+		//Logout function
+		function doLogout()
+		{
+			username = "";
+			path = "";
+			refreshLoginBox(username);
+		}
+		
+		//Delete RDF
+		function doDelete(path)
+		{
+			$("#login_message").html("");
+			var sUrl = URL + "services/RDF/delete?path="+path;
+			$.ajax({
+				type: "DELETE",
+				url: sUrl,
+				contentType: "application/json",
+				dataType: "json",
+				async: false,
+				success: function parse(resp, status, xhr) {
+				   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+				   $("#message").hide();
+				   refreshLoginBox(username);
+				   $("#login_message").html("<font color='green'><b>Record succesfully deleted</b></font>");
+
+				},
+				error: function(resp, status, xhr){
+					$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+					$("#message").show();
+				}
+			});
+		}
+		
+		//Update RDF
+		function doUpdate(path, rdf)
+		{
+			$("#login_message").html("");
+			//var encodedRdf = base64_encode(rdf);
+			var data = {"path": path, "rdf": rdf};
+			var sUrl = URL + "services/RDF/update";
+			$.ajax({
+				type: "POST",
+				url: sUrl,
+				contentType: "application/json",
+				data: JSON.stringify(data),
+				//dataType: "json",
+				async: false,
+				success: function parse(resp, status, xhr) {
+				   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+				   $("#message").hide();
+				   $("#login_message").html("<font color='green'><b>Record succesfully updated</b></font>d");
+				},
+				error: function(resp, status, xhr){
+					$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+					$("#message").show();
+				}
+			});
+		}
+		
+		//Update current Path on login
+		function updateCurrentPathLogin(sPath){
+			path = sPath;
+			home = extractCurrentPath(sPath);
+		}
+		
+		//Update current Path
+		function updateCurrentPath(sPath){
+			path = sPath;
+		}
+		
+		//Method to manager the pop menu
+		function edit(sPath){
+			$("#edit_dialog").dialog({
+				autoOpen: false,
+				width: 900,
+				height: 600,
+				modal: true,
+				buttons: [
+					{
+						text: "Save",
+						click: function() {
+							doUpdate(sPath, $("#rdf").val());
+							$(this).dialog("close");
+						}
+					},
+					{
+						text: "Cancel",
+						click: function() {
+							$(this).dialog("close");
+						}
+					}
+				]
+			});
+			
+			$("#edit_dialog").dialog("open");
+		    //event.preventDefault();
+		    loadRDF(username, sPath);
+		}
+	</script>
+	
+	<script type="text/javascript">
+		// The main function for loading the requested content
+		function loadContent(sUsername, sPath)
+		{
+			$("#login_message").html("");
+			arrayContentBeans = new Array();
+			var sUrl = URL + "services/RDF/retrieve?username="+sUsername+"&path="+sPath;
+			$.ajax({
+					type: "GET",
+					url: sUrl,
+					contentType: "application/json",
+					dataType: "json",
+					async: false,
+					success: function parse(resp, status, xhr) {
+					   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+					   $("#message").hide();
+					   $.each(resp, function() {
+							//$.each(this, function(i, cb) {
+								arrayContentBeans.push(this);
+							//});
+			      	   });
+						
+			      	   if(path != ""){
+			      	   	renderContent();
+			      	   }else{
+			      	   	renderContentLogin();
+			      	   }
+					},
+					error: function(resp, status, xhr){
+						$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+						$("#message").show();
+					}
+					
+				});	
+		}
+		
+		// The main function for loading the requested RDF
+		function loadRDF(sUsername, sPath)
+		{
+			$("#login_message").html("");
+			arrayContentBeans = new Array();
+			var sUrl = URL + "services/RDF/retrieve?username="+sUsername+"&path="+sPath;
+			$.ajax({
+					type: "GET",
+					url: sUrl,
+					contentType: "application/json",
+					dataType: "json",
+					async: false,
+					success: function parse(resp, status, xhr) {
+					   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+					   $("#message").hide();
+					   $.each(resp, function() {
+							arrayContentBeans.push(this);
+			      	   });
+						
+			      	   if(arrayContentBeans[0].rdf.text != null){
+			      	   		//var rdf = base64_decode(arrayContentBeans[0].rdf.text);
+			      	  		$("#edit_dialog").dialog("option", "title", sPath);
+			      	   		$("#edit_dialog").html("<textarea style='width: 894px; height: 485px;' name='rdf' id='rdf'>" +  arrayContentBeans[0].rdf.text + "</textarea>");
+			      	   }
+					},
+					error: function(resp, status, xhr){
+						$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+						$("#message").show();
+					}
+					
+				});	
+		}
+	</script>
+	
+	<script type="text/javascript">
+		// The function to render the content the first time after login
+		function renderContentLogin()
+		{
+			
+			document.getElementById('pannel').innerHTML="";
+			
+			var itemText = "<p style='color: #757561;font-weight: bold;font-size: 16px;margin-bottom: 10px;margin-top: 0;'><img src='images/dir.gif' style='vertical-align: bottom' />&nbsp;" + removePrefix(extractCurrentPath(arrayContentBeans[0].attributes.name)) + "</p>";
+				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
+				itemText += "<tr bgcolor='#757561'>";
+				itemText += "<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
+				itemText += "<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
+				itemText += "<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
+				itemText += "<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
+				itemText += "<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
+				itemText += "</tr>";
+				itemText += "</table>";
+				itemText += "<table class='hoverRow' width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
+				itemText += "<tbody>";
+				
+			if(username !="")
+			{			
+				//Save current path
+			 	//path = extractCurrentPath(arrayContentBeans[0].attributes.name);
+			 	//home = path;
+			 	
+				for (var key in arrayContentBeans) {
+					var oContentBean = arrayContentBeans[key];
+					
+					//Check if Directory or RDF
+					var sType;
+					var sSize;
+					if(oContentBean.attributes.type == false){
+						sType = "Directory";
+						sSize = "-";
+					}else{
+						sType = "RDF";
+						sSize = oContentBean.attributes.size;
+					}
+					
+					var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
+										
+					itemText += "<tr class='border_bottom'>";
+					if(oContentBean.attributes.type == false){
+						itemText += "<td align='left' width='800px' height='40px'>" + "<a href='#' onclick='javascript:updateCurrentPathLogin(\"" + oContentBean.attributes.name + "\");loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + removeAbsolutePath(oContentBean.attributes.name) + "</a></td>";
+					}else{
+						itemText += "<td align='left' width='800px' height='40px'>" + "<a href='#'>" + removeAbsolutePath(oContentBean.attributes.name) + "</a></td>";
+					}
+					itemText += "<td align='left' width='100px' height='40px'>" + sSize + "&nbsp;";
+						if(oContentBean.attributes.type == true){itemText += " B";}
+					itemText += "</td>";
+					itemText += "<td align='left' width='100px' height='40px'>" + sType + "</td>";	
+					itemText += "<td align='left' width='180px' height='40px'>" + sDate + "</td>";
+					
+					//Show ACL only for RDF
+					if(oContentBean.attributes.type == true){
+						itemText += "<td align='left' width='150px' height='40px' valign='bottom'>";
+						itemText += "	<a href='#' id='edit' onclick='edit();'><img src='images/doc_edit.gif' style='vertical-align: text-bottom' /></a>&nbsp;&nbsp;";
+						itemText += "	<img src='images/doc_lock.gif' style='vertical-align: text-bottom' />&nbsp;&nbsp;";
+						itemText += "	<a href='#' onclick='javascript:doDelete(\"" + oContentBean.attributes.name + "\");'><img src='images/doc_delete.gif' style='vertical-align: text-bottom' /></a>";
+						itemText += "</td>";			
+					}else{
+						itemText += "<td align='left' width='150px' height='40px'></td>";			
+					}
+						
+					itemText += "</tr>";
+				}	
+			}
+			
+			itemText += "</tbody>";
+			itemText += "</table>";
+			document.getElementById('pannel').innerHTML=itemText;
+		}
+		
+		// The main function to render the content
+		function renderContent()
+		{
+			document.getElementById('pannel').innerHTML="";
+			
+			var itemText = "<p style='color: #757561;font-weight: bold;font-size: 16px;margin-bottom: 10px;margin-top: 0;'><img src='images/dir.gif' style='vertical-align: bottom' />&nbsp;" + removePrefix(path) + "</p>";
+				itemText += "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
+				itemText += "<tr bgcolor='#757561'>";
+				itemText += "<td class='expfirst' align='left' width='800px' height='40px'>Name</td>";
+				itemText += "<td class='expfirst' align='left' width='100px' height='40px'>Size</td>";
+				itemText += "<td class='expfirst' align='left' width='100px' height='40px'>Type</td>";	
+				itemText += "<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>";
+				itemText += "<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>";			
+				itemText += "</tr>";
+				itemText += "</table>";
+				itemText += "<table class='hoverRow' width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>";
+				itemText += "<tbody>";
+				
+			if(username !="")
+			{	
+				//Save current path
+			 	//path = extractCurrentPath(arrayContentBeans[0].attributes.name);
+			 	
+			 	//Show "../" since current path is not home
+				if(path!=home)
+				{
+					itemText += "<tr class='border_bottom'>";
+					itemText += "<td align='left' width='800px' height='40px'>" + "<a href='#' onclick='javascript:levelUp();'>../</a></td>";
+					itemText += "<td align='left' width='100px' height='40px'> - </td>";
+					itemText += "<td align='left' width='100px' height='40px'>Directory</td>";	
+					itemText += "<td align='left' width='180px' height='40px'></td>";
+					itemText += "<td align='left' width='150px' height='40px'></td>";
+					itemText += "</tr>";
+				}
+					
+				for (var key in arrayContentBeans) {
+					var oContentBean = arrayContentBeans[key];
+					
+					//Check if Directory or RDF
+					var sType;
+					var sSize;
+					if(oContentBean.attributes.type == false){
+						sType = "Directory";
+						sSize = "-";
+					}else{
+						sType = "RDF";
+						sSize = oContentBean.attributes.size;
+					}
+					
+					var sDate = buildStringFromDate(new Date(oContentBean.attributes.lastModified));
+										
+					itemText += "<tr class='border_bottom'>";
+					if(oContentBean.attributes.type == false){
+						itemText += "<td align='left' width='800px' height='40px'>" + "<a href='#' onclick='javascript:updateCurrentPath(\"" + oContentBean.attributes.name + "\");loadContent(\"" + username + "\", \"" + oContentBean.attributes.name + "\");'>" + removeAbsolutePath(oContentBean.attributes.name) + "</a></td>";
+					}else{
+						itemText += "<td align='left' width='800px' height='40px'>" + "<a href='#'>" + removeAbsolutePath(oContentBean.attributes.name) + "</a></td>";
+					}
+					itemText += "<td align='left' width='100px'>" + sSize + "&nbsp;";
+						if(oContentBean.attributes.type == true){itemText += " B";}
+					itemText += "</td>";
+					itemText += "<td align='left' width='100px'>" + sType + "</td>";	
+					itemText += "<td align='left' width='180px'>" + sDate + "</td>";
+					
+					//Show ACL only for RDF
+					if(oContentBean.attributes.type == true){
+						itemText += "<td align='left' width='150px' height='40px' valign='bottom'>";
+						itemText += "	<a href='#' id='edit' onclick='edit(\"" + oContentBean.attributes.name + "\");'><img src='images/doc_edit.gif' style='vertical-align: text-bottom' /></a>&nbsp;&nbsp;";
+						itemText += "	<img src='images/doc_lock.gif' style='vertical-align: text-bottom' />&nbsp;&nbsp;";
+						itemText += "	<a href='#' onclick='javascript:doDelete(\"" + oContentBean.attributes.name + "\");'><img src='images/doc_delete.gif' style='vertical-align: text-bottom' /></a>";
+						itemText += "</td>";				
+					}else{
+						itemText += "<td align='left' width='150px' height='40px'></td>";			
+					}
+						
+					itemText += "</tr>";
+				}
+			}
+			
+			itemText += "</tbody>";
+			itemText += "</table>";	
+			document.getElementById('pannel').innerHTML=itemText;
+		}
+	</script>
+	
+</head>
+
+<body>
+	<div id="message" align="center"> </div>
+	
+	<div id="container">
+   		<fieldset style="padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;">
+	   		<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;">
+				<img src="images/logo.png" />
+			</fieldset>
+			
+			<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;margin-top:55px;text-align:center;">
+				<div id="login_message">
+					
+				</div>
+			</fieldset>
+			
+			<!-- Form -->
+			<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;">
+				<table align="right">
+					<tr>
+						<td align="left" style="vertical-align:bottom;width:85px;"><font color="#757561"><b>Username</b></font></td>
+						<td align="left" style="vertical-align:bottom;width:85px;"><font color="#757561"><b>Password</b></font></td>
+					</tr>
+					<tr>
+						<td align="left"><input name="username" id="username" type="text" style="border: 1px dotted #72CE9B;" width="85px" size="10" value=""></td>
+						<td align="left"><input name="password" id="password" type="password" style="border: 1px dotted #72CE9B;" width="85px" size="10" value=""></td>
+						<td align="left" style="vertical-align:top;">
+							<input type="button" id="login" value="Login" onClick="doLogin();">
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</fieldset>
+		
+		<fieldset style="padding:0px;border: none;" width="1320px;">
+			<hr class="bar" /> 
+		</fieldset>
+				
+		<!-- Middle pannel -->
+		<fieldset style="padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;" width="1320px;">
+		  		<!-- Pannel -->
+				<div id="pannel">
+					<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>
+						<tbody>
+							<tr bgcolor='#757561'>
+								<td class='expfirst' align='left' width='800px' height='40px'>Name</td>
+								<td class='expfirst' align='left' width='100px' height='40px'>Size</td>
+								<td class='expfirst' align='left' width='100px' height='40px'>Type</td>
+								<td class='expfirst' align='left' width='180px' height='40px'>Last Modified</td>
+								<td class='expfirst' align='left' width='150px' height='40px'>Actions</td>			
+							</tr>
+						</tbody>
+					</table>
+				</div>
+		</fieldset>
+						
+		<fieldset style="padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;" width="1320px;">
+			<hr class="bar"/> 
+		</fieldset>
+	</div>
+	
+	<div id="footer">
+		Copyright &copy; 2014 <a href="http://www.qcri.qa" target="_blank">QCRI</a> | All Rights Reserved, Doha, Qatar.
+	</div>
+	
+	<br/>	
+	<!-- Pop pop pannel -->
+	<div class="dialog" id="edit_dialog" title="" hidden="hidden" style="text-align: left;">
+
+	</div>
+ 	
+</body>
+</html>

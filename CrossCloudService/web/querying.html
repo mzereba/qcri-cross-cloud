@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+	<title>Querying</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<!-- meta http-equiv="Refresh" content="3600" -->
+	
+	<link rel="stylesheet" type="text/css" href="css/stylehtml.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+	
+	<style type="text/css">
+	  html { height: 100% }
+	  body { height: 100%; margin: 0; padding: 0 }
+	</style>
+	
+	<script type="text/javascript" src="scripts/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="scripts/jquery-ui.1.11.1.min.js"></script>
+	<script type="text/javascript" src="scripts/json.debug.js"></script>
+	
+	<script type="text/javascript" src="scripts/utils.js" djConfig="parseOnLoad: true"></script>
+
+	<script type="text/javascript">
+		// Variables initialization
+		var URL = "http://localhost:8080/LDM/";
+		var home = "";
+		var path = "";
+		var username = "";
+		var arrayBindings;
+		var arrayVars;
+	</script>
+	
+	<script type="text/javascript">
+		// Onload function
+		$(document).ready(function() {
+		   
+		});
+	</script>
+	
+	<script type="text/javascript">
+		//Login function
+		function doLogin()
+		{
+			username = document.getElementById('username').value;
+			var sPassword = document.getElementById('password').value;
+			var user;
+			if(username != "" && sPassword != ""){
+				var sUrl = URL + "services/RDF/login?username="+username+"&password="+sPassword;
+				$.ajax({
+					type: "GET",
+					url: sUrl,
+					contentType: "application/json",
+					dataType: "json",
+					async: false,
+					success: function parse(resp, status, xhr) {
+					   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+					   $("#message").hide();
+					   $.each(resp, function() {
+							user = resp[0].username;
+			      	   });
+					
+			      	   refreshLoginBoxQuerying(user);
+
+					},
+					error: function(resp, status, xhr){
+						$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+						$("#message").show();
+					}
+				});
+			}else{
+				document.getElementById('login_message').innerHTML="<font color='red'><b>Please insert username and password</b></font>";
+			}		
+		}
+		
+		//Logout function
+		function doLogout()
+		{
+			username = "";
+			path = "";
+			refreshLoginBoxQuerying(username);
+		}
+	</script>
+	
+	<script type="text/javascript">		
+		// The main function for performing the query
+		function performQuery(sUsername, sPath)
+		{
+			arrayVars = new Array();
+			arrayBindings = new Array();
+			var sQuery =  $("#query").val();
+			if(sQuery == ""){
+				alert("Please type a query to submit.");
+			}else{
+				var sUrl = URL + "services/RDF/query?q="+sQuery;
+				$.ajax({
+						type: "GET",
+						url: sUrl,
+						contentType: "application/json",
+						dataType: "json",
+						async: false,
+						success: function parse(resp, status, xhr) {
+						   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);
+						   $("#message").hide();
+							arrayVars = resp.head.vars;
+ 							arrayBindings = resp.results.bindings;
+							renderQuery();
+						},
+						error: function(resp, status, xhr){
+							$("#message").html("ERROR: " + resp.status + " " + resp.statusText + "\n" + xhr);
+							$("#message").show();
+						}
+						
+					});	
+				}
+		}
+	</script>
+	
+	<script type="text/javascript">
+		// The main function to render the query result
+		function renderQuery()
+		{
+			document.getElementById('pannel2').innerHTML="";
+			var iWidth = 1320;	
+			var itemText  = "<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px dotted #000000;' cellspacing='0' cellpadding='2'>";
+				itemText += "<tbody>";
+				itemText += "<tr bgcolor='#757561'>";
+				
+			for (var i = 0; i < arrayVars.length; i++) {
+				itemText += "<td class='expfirst' align='center' width='" + iWidth/arrayVars.length + "px' height='40px' style='font-size: 16px'>" + arrayVars[i] + "</td>";
+			}
+				itemText += "</tr>";
+				
+			for (var key in arrayBindings) {
+				if(key%2 == 0){
+					itemText += "<tr bgcolor='#F0F0F0'>"; 
+				}else{
+					itemText += "<tr>"; 
+				}
+
+				for (var j = 0; j < arrayVars.length; j++) {
+					if(j == arrayVars.length-1){
+						itemText += "<td align='left' width='" + iWidth/arrayVars.length + "px' height='40px' style='border-bottom: 1px dotted #000000;'><font color='#757561'><b>" + arrayBindings[key][arrayVars[j]].value + "</b></font></td>";
+					}else{
+						itemText += "<td align='left' width='" + iWidth/arrayVars.length + "px' height='40px' style='border-bottom: 1px dotted #000000;border-right: 1px dotted #000000;'><font color='#757561'><b>" + arrayBindings[key][arrayVars[j]].value + "</b></font></td>";
+					}
+				}
+						
+				itemText += "</tr>";
+			}
+			
+			itemText += "</tbody>";
+			itemText += "</table>";	
+			document.getElementById('pannel2').innerHTML=itemText;
+		}
+	</script>
+	
+</head>
+
+<body>
+	<div id="message" align="center"> </div>
+	
+	<div id="container">
+   		<fieldset style="padding-right:0px;padding-left:00px;padding-bottom: 0px;border:none;width:1320px;">
+	   		<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:200px;">
+				<img src="images/logo.png" />
+			</fieldset>
+			
+			<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:755px;margin-top:55px;text-align:center;">
+				<div id="login_message">
+					
+				</div>
+			</fieldset>
+			
+			<!-- Form -->
+			<fieldset style="float:left;padding-bottom:0px;padding-right:0px;padding-left:00px;border:none;width:350px; margin-top: 55px;">
+				<table align="right">
+					<tr>
+						<td align="left" style="vertical-align:bottom;width:85px;"><font color="#757561"><b>Username</b></font></td>
+						<td align="left" style="vertical-align:bottom;width:85px;"><font color="#757561"><b>Password</b></font></td>
+					</tr>
+					<tr>
+						<td align="left"><input name="username" id="username" type="text" style="border: 1px dotted #72CE9B;" width="85px" size="10" value=""></td>
+						<td align="left"><input name="password" id="password" type="password" style="border: 1px dotted #72CE9B;" width="85px" size="10" value=""></td>
+						<td align="left" style="vertical-align:top;">
+							<input type="button" id="login" value="Login" onClick="doLogin();">
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</fieldset>
+		
+		<fieldset style="padding:0px;border: none;" width="1320px;">
+			<hr class="bar" /> 
+		</fieldset>
+				
+		<!-- Middle pannel -->
+		<fieldset style="padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;border: none;" width="1320px;">
+		  		<!-- Pannel -->
+				<div id="pannel1">
+					<table width='100%;' style='vertical-align:top; background: none repeat scroll 0 0 #ffffff; border: 0px solid #72CE9B;' cellspacing='0px'>
+						<tr>
+							<td class='expfirst' colspan='3' align='left' width='1320px' style='color: #757561;font-weight: bold;font-size: 16px;'>SPARQL Query</td>
+						</tr>
+						<tr>
+							<td class='expfirst' colspan='3' align='center' width='100%' height='40px'><textarea style='width: 100%; height: 150px; background-color:#E0E0E0;' name='query' id='query'></textarea></td>
+						</tr>
+						<tr>
+							<td class='expfirst' colspan='3' align='right' width='1320px' height='40px'><input type='button' id='submitQuery' value='Submit Query' onClick='performQuery();' disabled="disabled"></td>
+						</tr>
+					</table>
+				</div>
+				<div id="pannel2">
+			
+				</div>
+		</fieldset>
+						
+		<fieldset style="padding-bottom:0px;padding-top:10px;padding-right:0px;padding-left:0px;border: none;" width="1320px;">
+			<hr class="bar"/> 
+		</fieldset>
+	</div>
+	
+	<div id="footer">
+		Copyright &copy; 2014 <a href="http://www.qcri.qa" target="_blank">QCRI</a> | All Rights Reserved, Doha, Qatar.
+	</div>
+	
+	<br/>	
+	<!-- Pop pop pannel -->
+	<div class="dialog" id="edit_dialog" title="" hidden="hidden" style="text-align: left;">
+
+	</div>
+ 	
+</body>
+</html>

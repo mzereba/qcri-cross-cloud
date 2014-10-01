@@ -179,8 +179,8 @@
  
  tr.border_bottom td {
   border-bottom: 1px dotted #000000;
-	}
- 
+ }
+
  a:link {
 	color: #757561;
 	text-decoration: none;
@@ -209,4 +209,6 @@
 	background-color: #F0F0F0;
  }
 
-
+ .dialog {
+	border: 1px dotted #72CE9B;
+ }
