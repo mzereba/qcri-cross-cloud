@@ -5,9 +5,9 @@
  */
 package org.qcri.crosscloud.server.http;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -27,14 +27,21 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.sail.SailRepository;
 import org.qcri.crosscloud.server.query.QueryManager;
 import org.qcri.crosscloud.server.query.ResultsWrapper;
 import org.qcri.crosscloud.utils.ACLBean;
 import org.qcri.crosscloud.utils.AttributesBean;
 import org.qcri.crosscloud.utils.ContentBean;
 import org.qcri.crosscloud.utils.Data;
+import org.qcri.crosscloud.utils.Query;
 import org.qcri.crosscloud.utils.RDFBean;
 
+import com.fluidops.fedx.Config;
+import com.fluidops.fedx.FedXFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -43,19 +50,40 @@ import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateProcessor;
 import com.hp.hpl.jena.update.UpdateRequest;
 import com.sun.jersey.spi.resource.Singleton;
-//import org.apache.commons.codec.binary.Base64;
-//import org.apache.commons.codec.binary.StringUtils;
+
+
+
+
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.model.Graph;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.sail.SailRepository;
+
+import com.fluidops.*;
+import com.fluidops.fedx.Config;
+import com.fluidops.fedx.FedX;
+import com.fluidops.fedx.FedXFactory;
+import com.fluidops.fedx.FederationManager;
+import com.fluidops.fedx.cache.MemoryCache;
+import com.fluidops.fedx.exception.FedXException;
+import com.fluidops.fedx.monitoring.MonitoringImpl;
+import com.fluidops.fedx.monitoring.MonitoringUtil;
+import com.fluidops.fedx.structures.Endpoint;
+
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
- * REST Resource class for retrieving RDF data
+ * REST Resource class for retrieving and manipulating  RDF data
  * 
- * mzereba
+ * mzereba,ahmed,essam
  */
 @Path("RDF")
 @Singleton
 public class Requests {
 	
-
+	
 	/**
 	 * Method for parsing REST request
 	 * 
@@ -74,11 +102,28 @@ public class Requests {
 		
 	}
 	
+	/**
+	 * Method for parsing REST request
+	 * 
+	 * @param data.Path data.content
+	 * 
+	 * @insert The list of ContentBeans to set in the response
+	 */
+	@POST
+	@XmlElement(name = "data")
+	@Path("/insert")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void insert(Data data) {
+	    
+		insertURI(data.getPath(), data.getRdf());
+		
+	}
 	
 	/**
 	 * Method for parsing REST request
 	 * 
-	 * @param Path
+	 * @param data.Path data.content
 	 * 
 	 * @update The list of ContentBeans to set in the response
 	 */
@@ -132,7 +177,6 @@ public class Requests {
 		return jsonString;
 	}
 	
-	
 	/**
 	 * Method for parsing REST request
 	 * 
@@ -141,14 +185,25 @@ public class Requests {
 	 * 
 	 * @return The list of ContentBeans to set in the response
 	 */
-	@GET
-	@XmlElement(name = "contentbean")
+	@POST
+	@XmlElement(name = "query")
 	@Path("/query")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String query(@QueryParam("q") String Q) {
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String query(Query query) {
 	    
-		String jsonString = getQueryResults(Q);
+		//System.out.print("the query ::\n" + Q + ":::\n\n"); 
 		
+		String jsonString = getQueryResults(query.getStatement());
+//		String jsonString="";
+//		try {
+//			jsonString = getLFQueryResults(Q);
+//		} catch (Throwable e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		//System.out.print("the query result ::\n" + Q);
 		return jsonString;
 	}
 	
@@ -363,6 +418,19 @@ public class Requests {
 		processor.execute();
 	}
 	
+	
+public void insertURI(String URI, String Content){
+		
+		UpdateRequest request = UpdateFactory.create();
+		
+		//System.out.print("INSERT DATA {" + Content + "}");
+		request.add("INSERT DATA {" + Content + "}");
+		//System.out.print("INSERT DATA {<" + URI.substring(0, URI.lastIndexOf("/")+1)+ "> <http://www.w3.org/ns/ldp#contains> <" + URI + ">}");
+		request.add("INSERT DATA {<" + URI.substring(0, URI.lastIndexOf("/")+1)+ "> <http://www.w3.org/ns/ldp#contains> <" + URI + ">}");
+		UpdateProcessor processor = UpdateExecutionFactory.createRemote(request, "http://localhost:3030/ds/update");
+		processor.execute();
+	}
+	
 	public void updateURI(String URI, String Content){
 		
 		UpdateRequest request = UpdateFactory.create();
@@ -394,9 +462,83 @@ public class Requests {
 		QueryManager qManager = new QueryManager();
 		ResultSet results = qManager.executeQuery(query);
 		ResultsWrapper wrapper = new ResultsWrapper(results);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		wrapper.getResultsAsJSON(baos);
-		return baos.toString();
+		return wrapper.getResultsAsJSON();
 	}
+	
+	public String getLFQueryResults(String q) throws Exception {
+		
+		String LFResult = "";
+		
+		/*
+		 ClassLoader cl = ClassLoader.getSystemClassLoader();
+		 URL[] urls = ((URLClassLoader)cl).getURLs();
+	     for(URL url: urls){
+	        	System.out.println(url.getFile());
+	        }
+	    //*/    
+	        
+		
+		q = "Select ?Owner ?Content ?Time Where{" ;
+		q = q+ " <http://essam.ldm.io/> <http://www.w3.org/ns/pim/space#storage> ?Storage.";
+		q = q+ " ?Storage <http://www.w3.org/ns/ldp#contains> ?MBlog.";
+		q = q+ " ?MBlog a <http://crosscloud/mblog/ChannelSpace>.";
+		q = q+ " ?MBlog <http://www.w3.org/ns/ldp#contains> ?SSList.";
+		q = q+ " ?SSList a <http://crosscloud/mblog/SubscriptionList>.";
+		q = q+ " ?SSList <http://www.w3.org/ns/ldp#contains> ?Subscription.";
+		q = q+ " ?Subscription a <http://crosscloud/mblog/Subscription>.";
+		q = q+ " ?Subscription <http://crosscloud/mblog/link> ?Channel.";
+		q = q+ " ?Channel <http://www.w3.org/ns/ldp#contains> ?Post. ";
+		q = q+ " ?Post a <http://crosscloud/mblog/Post>.";
+		q = q+ " ?Post <http://crosscloud/mblog/owner> ?Owner.";
+		q = q+ " ?Post <http://rdfs.org/sioc/ns#content> ?Content.";
+		q = q+ " ?Post <http://purl.org/dc/terms/created> ?Time. }";
+		
+		System.out.print("the LF Q is ::\n" + q +"\n:::\n");
+		
+		Config.initialize();
+		
+		System.out.print("Config.initialize() ::\n");
+		
+		SailRepository repo = FedXFactory.initializeSparqlFederation(Arrays.asList(
+				"http://localhost:3031/ds/query",
+				"http://localhost:3032/ds/query",
+				"http://localhost:3033/ds/query"));
+		
+		System.out.print("initializeSparqlFederation ::\n");
+		
+		TupleQuery query = repo.getConnection().prepareTupleQuery(QueryLanguage.SPARQL, q);
+		TupleQueryResult results = query.evaluate();
+		
+		
+		while (results.hasNext()) {
+			//System.out.println(results.next());
+			LFResult = LFResult + results.next() +"\n";
+		}
+		
+		System.out.print("******* Link Following Result **********\n"+LFResult);
+		
+		FederationManager.getInstance().shutDown();
+		System.out.println("******* Done.**********\n");
+		
+		toJSON(LFResult) ;
+		return LFResult;
+		
+				
+	}
+	
+	
+	private String toJSON (String input){
+		String output= "";
+		String Oheader1  = "{ \n \"head\":\n { \"vars\":";
+		String Oheader2  = " } ,";
+		String Oresults1 = "\"results\": \n{ \"bindings\": [\n";
+		String Oresults2 = "]\n }\n }\n";
+		String tuple	 = "";
+		
+		return output;
+	}
+	
+	
+	
 
 }

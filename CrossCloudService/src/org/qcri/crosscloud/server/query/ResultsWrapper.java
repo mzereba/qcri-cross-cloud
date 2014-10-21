@@ -14,8 +14,10 @@ public class ResultsWrapper {
 		this.results = results;
 	}
 	
-	public void getResultsAsJSON(ByteArrayOutputStream baos){
+	public String getResultsAsJSON(){
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ResultSetFormatter.outputAsJSON(baos, results);
+		return baos.toString();
 	}
 	
 	public void printResults(){

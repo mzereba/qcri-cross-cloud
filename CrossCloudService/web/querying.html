@@ -91,12 +91,14 @@
 			if(sQuery == ""){
 				alert("Please type a query to submit.");
 			}else{
-				var sUrl = URL + "services/RDF/query?q="+sQuery;
+				var query = {"statement": sQuery};
+				var sUrl = URL + "services/RDF/query";
 				$.ajax({
-						type: "GET",
+						type: "POST",
 						url: sUrl,
 						contentType: "application/json",
-						dataType: "json",
+						data: JSON.stringify(query),
+						//dataType: "json",
 						async: false,
 						success: function parse(resp, status, xhr) {
 						   $("#message").html("STATUS: " + xhr.status + " " + xhr.statusText + "\n" + resp);

@@ -1,56 +1,58 @@
 <project name="CrossCloudService" default="deploy.local" basedir="..">
-	
-  <property name="institution" value="qcri"/>
-  <property name="group" value="qcri"/>
-  <property name="base_package.dir" value="org/${institution}"/>
-  <property name="base_package.LDM" value="LDM"/>
 
-  <property name="system.name" value="LDM"/>
-  <property name="jar.name" value="${system.name}.jar"/>
-  <property name="xml.jar.name" value="${system.name}-xml.jar"/>
-  <property name="war.name" value="${system.name}.war"/>
+	<property name="parent.dir" location=".." />
 
-  <property name="src.dir" value="${basedir}/src"/> 
-  <property name="generated_src.dir" value="${basedir}/generated_src"/>
-  <property name="generated_xml.dir" value="${basedir}/generated_xml"/>
-  <property name="build.dir" value="${basedir}/build"/>
-  <property name="build.classes" value="${build.dir}/classes"/>
-  <property name="jar.dir" value="${basedir}/jars"/> 
-  <property name="web.dir" value="${basedir}/web"/>
-  <property name="conf.dir" value="${basedir}/conf"/>
-  <property name="doc.dir" value="${basedir}/doc"/>
-  
-  <!--
+	<property name="institution" value="qcri"/>
+	<property name="group" value="qcri"/>
+	<property name="base_package.dir" value="org/${institution}"/>
+	<property name="base_package.LDM" value="LDM"/>
+
+	<property name="system.name" value="LDM"/>
+	<property name="jar.name" value="${system.name}.jar"/>
+	<property name="xml.jar.name" value="${system.name}-xml.jar"/>
+	<property name="war.name" value="${system.name}.war"/>
+
+	<property name="src.dir" value="${basedir}/src"/>
+	<property name="generated_src.dir" value="${basedir}/generated_src"/>
+	<property name="generated_xml.dir" value="${basedir}/generated_xml"/>
+	<property name="build.dir" value="${basedir}/build"/>
+	<property name="build.classes" value="${build.dir}/classes"/>
+	<property name="jar.dir" value="${basedir}/jars"/>
+	<property name="web.dir" value="${basedir}/web"/>
+	<property name="conf.dir" value="${basedir}/conf"/>
+	<property name="doc.dir" value="${basedir}/doc"/>
+
+	<!--
   <property name="conf.classes" value="${conf.dir}/classes"/>
   <property name="conf.instance" value="${conf.classes}/instance"/>
   <property name="conf.webinf" value="${conf.dir}/webinf"/>
   <property name="conf.log" value="${conf.dir}/log"/>
   <property name="conf.sys" value="${conf.dir}/sys"/>
   -->
-	
-  <property name="dist.dir" value="${basedir}/dist"/>
-  <property name="dist.src" value="${dist.dir}/WEB-INF/src"/>
-  <property name="dist.classes" value="${dist.dir}/WEB-INF/classes"/>
-  <property name="dist.lib" value="${dist.dir}/WEB-INF/lib"/>
-  <property name="dist.package" value="${dist.classes}/"/>
-  <property name="dist.webinf" value="${dist.dir}/WEB-INF"/>
-  <property name="dist.tld" value="${dist.webinf}/tld"/>
-  <property name="dist.doc" value="${dist.dir}/doc"/>
-	  
-  <property name="tomcat.home" value="C:\apache-tomcat-7.0.52"/>
-  <property name="tomcat.logs" value="${tomcat.home}/logs"/>
-  <property name="tomcat.log.common" value="${tomcat.logs}/common.log"/>
-  <property name="tomcat.log.instance" value="${tomcat.logs}/${system.name}.log"/>
-  <property name="tomcat.webapps" value="${tomcat.home}/webapps"/>
-  <property name="tomcat.common" value="${tomcat.home}/common"/>
-  <property name="tomcat.instance" value="${tomcat.webapps}/${system.name}"/>
-  <property name="tomcat.common.classes" value="${tomcat.common}/classes"/>
-  <!--	
+
+	<property name="dist.dir" value="${basedir}/dist"/>
+	<property name="dist.src" value="${dist.dir}/WEB-INF/src"/>
+	<property name="dist.classes" value="${dist.dir}/WEB-INF/classes"/>
+	<property name="dist.lib" value="${dist.dir}/WEB-INF/lib"/>
+	<property name="dist.package" value="${dist.classes}/"/>
+	<property name="dist.webinf" value="${dist.dir}/WEB-INF"/>
+	<property name="dist.tld" value="${dist.webinf}/tld"/>
+	<property name="dist.doc" value="${dist.dir}/doc"/>
+
+	<property name="tomcat.home" value="C:\apache-tomcat-7.0.52"/>
+	<property name="tomcat.logs" value="${tomcat.home}/logs"/>
+	<property name="tomcat.log.common" value="${tomcat.logs}/common.log"/>
+	<property name="tomcat.log.instance" value="${tomcat.logs}/${system.name}.log"/>
+	<property name="tomcat.webapps" value="${tomcat.home}/webapps"/>
+	<property name="tomcat.common" value="${tomcat.home}/common"/>
+	<property name="tomcat.instance" value="${tomcat.webapps}/${system.name}"/>
+	<property name="tomcat.common.classes" value="${tomcat.common}/classes"/>
+	<!--	
   <property name="schema.dir" value="${basedir}/schemas" />
   -->
-  <property name="debug" value="true"/>
-	
-  <property name="classpath" value="
+	<property name="debug" value="true"/>
+
+	<property name="classpath" value="
   	${jar.dir}/activation-1.1.jar;
   	${jar.dir}/asm-3.1.jar;
   	${jar.dir}/javax.servlet.jsp.jstl.jar;
@@ -63,32 +65,44 @@
   	${jar.dir}/jsr311-api-1.1.1.jar;
   	${jar.dir}/jackson-all-1.9.0.jar;
   	${jar.dir}/stax-api-1.0-2.jar
-  	${jar.dir}/commons-codec-1.6.jar;
   	${jar.dir}/jena-core-2.10.1.jar;
-  	${jar.dir}/slf4j-log4j12-1.6.4.jar;
   	${jar.dir}/httpclient-4.2.3.jar;
   	${jar.dir}/jena-iri-0.9.6.jar;
   	${jar.dir}/xercesImpl-2.11.0.jar;
   	${jar.dir}/httpcore-4.2.2.jar;
   	${jar.dir}/jena-tdb-0.10.1.jar;
   	${jar.dir}/xml-apis-1.4.01.jar;
-  	${jar.dir}/jcl-over-slf4j-1.6.4.jar;
+  	${jar.dir}/jcl-over-slf4j-1.5.2.jar;
   	${jar.dir}/log4j-1.2.16.jar;
   	${jar.dir}/jena-arq-2.10.1.jar;
-  	${jar.dir}/slf4j-api-1.6.4.jar"
+  	
+  	
+  	${jar.dir}/commons-codec-1.4.jar;
+  	${jar.dir}/commons-compress-1.1.jar;
+  	${jar.dir}/commons-httpclient-3.1.jar;
+  	${jar.dir}/commons-io-2.1.jar;
+  	${jar.dir}/commons-logging-1.1.1.jar;
+  	${jar.dir}/fedx-3.1.jar;
+  	${jar.dir}/jackson-core-2.1.4.jar;
+  	${jar.dir}/openrdf-sesame-2.7.3-onejar.jar;
+  	${jar.dir}/slf4j-log4j12-1.5.2.jar;
+  	${jar.dir}/slf4j-api-1.5.2.jar"
   />
-	
-  <fileset dir="${jar.dir}" id="required.libs">
-	<!--
+
+	<fileset dir="${jar.dir}" id="required.libs">
+		<!--
+		${jar.dir}/slf4j-log4j12-1.6.4.jar;
+		${jar.dir}/slf4j-api-1.6.4.jar;
+		${jar.dir}/jcl-over-slf4j-1.6.4.jar;
   	<exclude name="servlet-api.jar"/>
   	<include name="*.properties"/>	
   	 -->
-  	<exclude name="javax.servlet.jar"/>
-  	<exclude name="javax.servlet.jsp.jar"/>
-	<include name="*.jar"/>
-  </fileset>
-  
-  <!-- 
+		<exclude name="javax.servlet.jar"/>
+		<exclude name="javax.servlet.jsp.jar"/>
+		<include name="*.jar"/>
+	</fileset>
+
+	<!-- 
       Path ref used by XDoclet tasks.  
 	      
       Note: Normally, references to 
@@ -118,30 +132,30 @@
 	</target>
 	<target name="-pre-compile" depends="wsapt"/>
 	-->
-  <target name="prepare">
-	<mkdir dir="${build.dir}"/>
-  	<mkdir dir="${build.classes}"/>
-  	<mkdir dir="${dist.dir}"/>
-  	<mkdir dir="${dist.classes}"/>
-  	<mkdir dir="${dist.lib}"/>
-  	<mkdir dir="${dist.doc}"/>
-  </target>
-		
-  <target name="clean.code">
-  	<echo message="Cleaning code..."/>
-  	
-  	<!-- Delete the build directory -->
-  	<delete dir="${build.dir}" />
-  	 
-  	<!--<delete dir="${generated_src.dir}"/>-->
-  	<delete dir="${generated_src.dir}"/>
-  	
-  	<!-- Delete the distribution directory -->
-  	<delete includeemptydirs="true">
-  	  	<fileset dir="${dist.dir}" includes="**/*"/>
-  	</delete>
-  	
-  	<!-- Delete the common css files (except app specific) 
+	<target name="prepare">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.classes}"/>
+		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${dist.classes}"/>
+		<mkdir dir="${dist.lib}"/>
+		<mkdir dir="${dist.doc}"/>
+	</target>
+
+	<target name="clean.code">
+		<echo message="Cleaning code..."/>
+
+		<!-- Delete the build directory -->
+		<delete dir="${build.dir}" />
+
+		<!--<delete dir="${generated_src.dir}"/>-->
+		<delete dir="${generated_src.dir}"/>
+
+		<!-- Delete the distribution directory -->
+		<delete includeemptydirs="true">
+			<fileset dir="${dist.dir}" includes="**/*"/>
+		</delete>
+
+		<!-- Delete the common css files (except app specific) 
   	<delete>
   	  <fileset dir="${web.dir}/css">
   		<exclude name="arabidopsis.css" />
@@ -149,30 +163,30 @@
   	  </fileset>
   	</delete>
     -->
-  	
-  	<!-- Delete the common javascript files (except app specific) 
+
+		<!-- Delete the common javascript files (except app specific) 
   	<echo message="Remove common javascript..."/>
   	<delete dir="${web.dir}/js"/>
   	-->
-  	
-  </target>
-	
-  <target name="clean.tomcat">
-    <echo message="Cleaning tomcat..."/>
-  	
-  	<!-- Delete the tomcat instance -->
-  	<delete dir="${tomcat.instance}"/>
-  	
-  	<delete file="${tomcat.webapps}/${system.name}.war"/>
-  	
-  	<delete file="${tomcat.log.common}"/>
-  	<delete file="${tomcat.log.instance}"/>
-  </target>
-	
-  <target name="clean" depends="clean.code, clean.tomcat" 
+
+	</target>
+
+	<target name="clean.tomcat">
+		<echo message="Cleaning tomcat..."/>
+
+		<!-- Delete the tomcat instance -->
+		<delete dir="${tomcat.instance}"/>
+
+		<delete file="${tomcat.webapps}/${system.name}.war"/>
+
+		<delete file="${tomcat.log.common}"/>
+		<delete file="${tomcat.log.instance}"/>
+	</target>
+
+	<target name="clean" depends="clean.code, clean.tomcat" 
   	description="Cleans code and tomcat" />
-	
-  <!-- 
+
+	<!-- 
       2nd Fileset would normally point to jboss.
   
   <target name="xdoclet.web" description="Generates web descriptors">
@@ -210,12 +224,14 @@
    </webdoclet>
   </target>	
   -->
-	
-  <target name="package.web" description="Generate Web Archive">
-   <jar jarfile="${dist.dir}/${war.name}" basedir="${dist.dir}"/>
-  </target>
-  
-  <!--	
+
+	<target name="package.web" description="Generate Web Archive">
+
+		<jar jarfile="${dist.dir}/${war.name}" basedir="${dist.dir}">
+		</jar>
+	</target>
+
+	<!--	
   <target name="generate.xmlbeans">
    <taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean" classpath="${jar.dir}/xmlbeans/xbean.jar"/>  
   	<xmlbean  
@@ -227,32 +243,32 @@
   	  	  failonerror="true"/>
   	<fileset dir="${schema.dir}" includes="**/*.*"/>
   </target>
-  -->	
-	
-  <target name="compile" depends="prepare" 
+  -->
+
+	<target name="compile" depends="prepare" 
   	description="Compiles all java files">
-  	
-  	<!--
+
+		<!--
   	<antcall target="xdoclet.web"/>
   	-->
-  	
-  	<javac destdir="${build.classes}" debug="${debug}"
+
+		<javac destdir="${build.classes}" debug="${debug}"
   		optimize="${optimize}" failonerror="true" deprecation="on"
   		fork="true" memoryMaximumSize="256m" excludes="**/test/*.java" includes="**/*.java" nowarn="no"
   		source="6" target="6">
-  	  
-  	  <src path="${src.dir}"/>
-  	  <classpath path="${classpath}"/>
-  	</javac>
-  	
-  </target>
-		
-  <target name="package.dist" depends="clean, compile">
-  	<copy toDir="${dist.classes}" overwrite="true">
-  	 <fileset dir="${build.classes}"/>
-  	</copy>
-  	
-  	<!--
+
+			<src path="${src.dir}"/>
+			<classpath path="${classpath}"/>
+		</javac>
+
+	</target>
+
+	<target name="package.dist" depends="clean, compile">
+		<copy toDir="${dist.classes}" overwrite="true">
+			<fileset dir="${build.classes}"/>
+		</copy>
+
+		<!--
   	<antcall target="copy.classes"/>
   	
   	<copy toDir="${dist.classes}" overwrite="true">
@@ -262,21 +278,21 @@
   	 </fileset>
  	</copy>
  	-->
-  	<!--
+		<!--
   	<copy toDir="${dist.classes}/org/qcri/power/util" overwrite="true">
   	  <fileset dir="${conf.dir}/">
   	  	<include name="libipmi_agent.so"/>
   	  </fileset>
   	</copy>
   		-->
-  	<copy toDir="${dist.lib}" overwrite="true">
-  	  <fileset dir="${jar.dir}">
-  	  	 <exclude name="javax.servlet.jar"/>
-  	     <exclude name="javax.servlet.jsp.jar"/>
-  	  </fileset>
-  	</copy>
-  	  	
-  	<!--
+		<copy toDir="${dist.lib}" overwrite="true">
+			<fileset dir="${jar.dir}">
+				<exclude name="javax.servlet.jar"/>
+				<exclude name="javax.servlet.jsp.jar"/>
+			</fileset>
+		</copy>
+
+		<!--
   	<copy toDir="${dist.webinf}/lib" flatten="true">
 	 <fileset refid="required.libs" />
  	</copy>
@@ -287,20 +303,20 @@
   	 </fileset>	
   	</copy>
   	-->
-  	
-  	<copy toDir="${dist.dir}" overwrite="true">
-	 <fileset dir="${web.dir}">
-	  <!--exclude name="templates/**"/-->
-	  <include name="**"/>
-	 </fileset>
-  	</copy>
-  </target>
-  
-  <target name="deploy.local" depends="package.dist">
-  	<echo message="Creating war file"/>
-  	<antcall target="package.web"/>
-  	
-  	<!--
+
+		<copy toDir="${dist.dir}" overwrite="true">
+			<fileset dir="${web.dir}">
+				<!--exclude name="templates/**"/-->
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="deploy.local" depends="package.dist">
+		<echo message="Creating war file"/>
+		<antcall target="package.web"/>
+
+		<!--
   	<echo message="Configure logging at ${tomcat.common.classes}"/>
   	<copy toDir="${tomcat.common.classes}" overwrite="true">
   	 <fileset dir="${conf.log}">
@@ -308,16 +324,16 @@
   	 </fileset>
   	</copy>
   	-->
-  	
-  	<echo message="Deploying local tomcat instance at ${tomcat.webapps}"/>
-  	<copy toDir="${tomcat.webapps}" overwrite="true">
-  	 <fileset dir="${dist.dir}">
-  	  <include name="${war.name}"/>
-	 </fileset>
-  	</copy>
-  </target>
 
-  <!--
+		<echo message="Deploying local tomcat instance at ${tomcat.webapps}"/>
+		<copy toDir="${tomcat.webapps}" overwrite="true">
+			<fileset dir="${dist.dir}">
+				<include name="${war.name}"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<!--
   <target name="javadoc" description="Generate Documentation">
 		<echo message="Generating javadoc..."/>    
 		<delete dir="${doc.dir}"/>
@@ -331,5 +347,5 @@
   	  	</copy>
   </target>
   -->
-	
+
 </project>
