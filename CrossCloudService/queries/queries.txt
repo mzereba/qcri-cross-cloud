@@ -1,0 +1,16 @@
+Select ?Owner ?Content ?Time
+Where {
+<http://localhost:8080/LDM/server/essam/> <http://www.w3.org/ns/pim/space#storage> ?Storage.
+?Storage <http://www.w3.org/ns/ldp#contains> ?MBlog.
+?MBlog a <http://crosscloud/mblog/ChannelSpace>.
+?MBlog <http://www.w3.org/ns/ldp#contains> ?SSList.
+?SSList a <http://crosscloud/mblog/SubscriptionList>.
+?SSList <http://www.w3.org/ns/ldp#contains> ?Subscription.
+?Subscription a <http://crosscloud/mblog/Subscription>.
+?Subscription <http://crosscloud/mblog/link> ?Channel.
+?Channel <http://www.w3.org/ns/ldp#contains> ?Post. 
+?Post a <http://crosscloud/mblog/Post>.
+?Post <http://crosscloud/mblog/owner> ?Owner.
+?Post <http://rdfs.org/sioc/ns#content> ?Content.
+?Post <http://purl.org/dc/terms/created> ?Time.
+}

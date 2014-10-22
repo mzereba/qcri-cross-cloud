@@ -85,10 +85,18 @@ import java.net.URLClassLoader;
  * 
  * mzereba,ahmed,essam
  */
-@Path("{username}")
+@Path("RDF")
 @Singleton
-public class Requests {
+public class oRequests {
 	
+	
+	@GET
+ 	@Path("count")
+ 	@Produces(MediaType.TEXT_PLAIN)
+ 	public String getCount() {
+ 		int count = 30;
+ 		return String.valueOf(count);
+	}
 	
 	@GET
  	@Path("{url:.*}")

@@ -1,0 +1,35 @@
+curl -H"Accept:text/turtle" https://graph.facebook.com/100006991204719/
+
+curl -H"Accept:text/turtle" https://essam.rww.io/profile/card#me
+
+curl -vH"Accept:text/turtle" https://essam.rww.io/storage/
+
+curl -vH"Accept:text/turtle" https://essam.rww.io/storage/ublog/default/
+
+curl -H "Accept: application/rdf+json" http://localhost:3030/ds/query?query=SELECT++%3Fcontent+%3Ftime+%0D%0AWHERE%7B%0D%0A%0D%0A%3Fpost+%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type%3E+++%3Ch7p%3A%2F%2Frdfs.org%2Fsioc%2Fns%2FPost%3E+%3B%0D%0A%3Ch7p%3A%2F%2Frdfs.org%2Fsioc%2Fns%2Fhas_creator%3E+%3Chttps%3A%2F%2Fessam.rww.io%2Fprofile%2Fcard%23me%3E%3B%0D%0A%3Ch7p%3A%2F%2Frdfs.org%2Fsioc%2Fns%2Fcontent%3E++%3Fcontent%3B%0D%0A%3Ch7p%3A%2F%2Fpurl.org%2Fdc%2Fterms%2Fcreated%3E+%3Ftime%3B%0D%0A%3Ch7p%3A%2F%2Frdfs.org%2Fsioc%2Fns%2Ftopic%3E+%3Ftopic.%0D%0A%7D%0D%0AORDER+BY+DESC%28%3Ftime%29%0D%0A+limit+3&output=json&stylesheet= 
+
+
+
+
+
+@GET
+ 	@Path("{url:.*}")
+ 	//@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
+ 	public String getURL(@PathParam("url") String url, @Context UriInfo ui) {
+		
+		String Path= ui.getRequestUri().toString();
+		ArrayList<ContentBean> lContentBeans = getAnswers("essam", Path);
+		String jsonString = serializeListToJSON(lContentBeans);
+		
+ 		return jsonString;
+	}
+	
+	
+	@GET
+	 	@Path("count")
+	 	@Produces(MediaType.TEXT_PLAIN)
+	 	public String getCount() {
+	 		int count = 30;
+	 		return String.valueOf(count);
+		}

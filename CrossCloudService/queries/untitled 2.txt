@@ -1,0 +1,20 @@
+curl -H "Accept: application/sparql-results+xml, */*;q=0.5" http://localhost:8080/openrdf-sesame/repositories
+
+curl -T rdftest2.rdf -H "Content-Type: application/rdf+xml;charset=UTF-8" http://localhost:8080/openrdf-sesame/repositories/test1/statements
+
+
+<path id="library.Project">
+			<fileset dir="${jar.dir}">
+			<include name="**/*.jar"/>
+			</fileset>
+			</path>
+			
+			<manifestclasspath property="lib.list" jarfile=".">
+			<classpath refid="library.Project" />
+			</manifestclasspath>
+		
+		<jar jarfile="${dist.dir}/${war.name}" basedir="${dist.dir}">
+			<manifest>
+				<attribute name="Class-Path" value="${lib.list}"/>
+			</manifest>
+		</jar>
