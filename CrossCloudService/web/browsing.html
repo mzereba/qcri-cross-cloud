@@ -44,7 +44,7 @@
 			var sPassword = document.getElementById('password').value;
 			var user;
 			if(username != "" && sPassword != ""){
-				var sUrl = URL + "services/RDF/login?username="+username+"&password="+sPassword;
+				var sUrl = URL + "server/"+"RDF"+"/login?username="+username+"&password="+sPassword;
 				$.ajax({
 					type: "GET",
 					url: sUrl,
@@ -84,7 +84,7 @@
 		function doDelete(path)
 		{
 			$("#login_message").html("");
-			var sUrl = URL + "services/RDF/delete?path="+path;
+			var sUrl = URL + "server/"+"RDF"+"/delete?path="+path;
 			$.ajax({
 				type: "DELETE",
 				url: sUrl,
@@ -111,7 +111,7 @@
 			$("#login_message").html("");
 			//var encodedRdf = base64_encode(rdf);
 			var data = {"path": path, "rdf": rdf};
-			var sUrl = URL + "services/RDF/update";
+			var sUrl = URL + "server/"+"RDF"+"/update";
 			$.ajax({
 				type: "POST",
 				url: sUrl,
@@ -178,7 +178,7 @@
 		{
 			$("#login_message").html("");
 			arrayContentBeans = new Array();
-			var sUrl = URL + "services/RDF/retrieve?username="+sUsername+"&path="+sPath;
+			var sUrl = URL + "server/"+"RDF"+"/retrieve?username="+sUsername+"&path="+sPath;
 			$.ajax({
 					type: "GET",
 					url: sUrl,
@@ -213,7 +213,7 @@
 		{
 			$("#login_message").html("");
 			arrayContentBeans = new Array();
-			var sUrl = URL + "services/RDF/retrieve?username="+sUsername+"&path="+sPath;
+			var sUrl = URL + "server/"+"RDF"+"/retrieve?username="+sUsername+"&path="+sPath;
 			$.ajax({
 					type: "GET",
 					url: sUrl,
